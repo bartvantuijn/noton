@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Filament\Pages\Settings;
 use App\Filament\Resources\CategoryResource;
 use App\Filament\Resources\PostResource;
 use App\Filament\Resources\UserResource;
@@ -13,6 +14,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
@@ -42,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->emailVerification(isRequired: false)
             ->profile(isSimple: false)
-            ->font('Jost')
+            ->font('Montserrat')
             ->colors([
                 'primary' => Color::hex(app('colors.primary')),
             ])
@@ -77,7 +79,16 @@ class AdminPanelProvider extends PanelProvider
                 //Authenticate::class,
             ])
             ->spa()
-            ->navigation(fn(NavigationBuilder $builder): NavigationBuilder => self::getNavigation($builder));
+            ->navigation(fn(NavigationBuilder $builder): NavigationBuilder => self::getNavigation($builder))
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label(__('Settings'))
+                    ->url(fn (): string => Settings::getUrl())
+                    ->icon('heroicon-o-cog')
+                    ->visible(fn () => Settings::canAccess())
+            ])
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
+            ->globalSearchFieldKeyBindingSuffix();
     }
 
     public function getNavigation(NavigationBuilder $builder): NavigationBuilder
@@ -106,6 +117,7 @@ class AdminPanelProvider extends PanelProvider
                                     NavigationItem::make(__('Create post'))
                                         ->badge('+')
                                         ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
+                                        ->visible(Gate::allows('create', Category::class))
                                 )
                                 ->toArray()
                             );

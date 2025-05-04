@@ -9,7 +9,7 @@ export default {
     ],
     theme: {
         fontFamily: {
-            sans: ['Jost', 'sans-serif'],
+            sans: ['Montserrat', 'sans-serif'],
         },
     },
 }

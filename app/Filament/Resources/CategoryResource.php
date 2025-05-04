@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
+use App\Models\Post;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -21,7 +22,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-folder';
 
     public static function getModelLabel(): string
     {
@@ -61,10 +62,14 @@ class CategoryResource extends Resource
                             ->visible(fn () => auth()->check()),
                     ])
                     ->schema([
-                        Infolists\Components\TextEntry::make('content')
-                            ->hiddenLabel()
-                            ->markdown()
-                            ->formatStateUsing(fn ($state) => Str::markdown($state)),
+                        Infolists\Components\RepeatableEntry::make('posts')
+                            ->label(__('Posts'))
+                            ->schema([
+                                Infolists\Components\TextEntry::make('title')
+                                    ->hiddenLabel()
+                                    ->url(fn (Post $post) => PostResource::getUrl('view', ['record' => $post]))
+                                    ->icon('heroicon-o-document-text'),
+                            ]),
                     ]),
             ]);
     }
