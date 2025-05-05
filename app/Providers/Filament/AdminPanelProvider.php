@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('')
             ->login()
-            ->registration()
+            //->registration()
             ->passwordReset()
             ->emailVerification(isRequired: false)
             ->profile(isSimple: false)
@@ -78,7 +78,6 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 //Authenticate::class,
             ])
-            ->spa()
             ->navigation(fn(NavigationBuilder $builder): NavigationBuilder => self::getNavigation($builder))
             ->userMenuItems([
                 MenuItem::make()
@@ -110,7 +109,7 @@ class AdminPanelProvider extends PanelProvider
                                     $category->posts->map(function ($post) {
                                         return NavigationItem::make($post->title)
                                             ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
-                                            ->isActiveWhen(fn () => request()->routeIs('filament.admin.resources.posts.view') && request()->route('record') == $post->id);
+                                            ->isActiveWhen(fn () => (request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit')) && request()->route('record') == $post->id);
                                     })
                                 )
                                 ->push(
