@@ -1,0 +1,40 @@
+services:
+  noton:
+    container_name: noton
+    image: ghcr.io/bartvantuijn/noton:latest
+    restart: unless-stopped
+    ports:
+      - "6686:6686"
+    networks:
+      - noton
+    environment:
+      APP_NAME: Noton
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: http://localhost
+      APP_LOCALE: nl
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: noton_database
+      DB_USERNAME: noton_user
+      DB_PASSWORD: noton_password
+    volumes:
+      - ./storage:/srv/www/storage
+
+  postgres:
+    container_name: postgres
+    image: postgres:16
+    restart: unless-stopped
+    networks:
+      - noton
+    environment:
+      POSTGRES_DB: noton_database
+      POSTGRES_USER: noton_user
+      POSTGRES_PASSWORD: noton_password
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+networks:
+  noton:
+    driver: bridge
