@@ -1,6 +1,8 @@
 # Changelog
 
-* Improve entrypoint
+## [0.1.2](https://github.com/bartvantuijn/noton/compare/v0.1.1...v0.1.2) (2025-03-06)
+
+* Remove ping and use netcat for database check in `entrypoint.sh`
 
 ## [0.1.1](https://github.com/bartvantuijn/noton/compare/v0.1.0...v0.1.1) (2025-09-05)
 
