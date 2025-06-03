@@ -1,12 +1,10 @@
 #!/bin/sh
 
 # Waiting for database to be ready and reachable
-if [ "$DB_HOST" ]; then
-  until ping -c 1 "$DB_HOST" >/dev/null 2>&1; do
-    echo "Waiting for $DB_HOST..."
-    sleep 2
-  done
-fi
+until nc -z "$DB_HOST" "$DB_PORT"; do
+  echo "Waiting for $DB_HOST..."
+  sleep 2
+done
 
 # Generate .env if not mounted
 if [ ! -f .env ]; then
