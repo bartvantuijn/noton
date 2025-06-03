@@ -49,7 +49,7 @@ RUN set -eux; \
 
 # Install extensions
 RUN apt-get update; apt-get install --no-install-recommends -y \
-    acl ssh git nano netcat libicu-dev caddy supervisor
+    acl ssh git nano netcat-traditional libicu-dev caddy supervisor
 
 # Enable extensions
 RUN docker-php-ext-install bcmath pdo_mysql intl exif
