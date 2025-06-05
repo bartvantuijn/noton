@@ -84,20 +84,6 @@ Except for displaying the License Details and identifying us as the origin of
 the Software, you have no right under these Terms and Conditions to use our
 trademarks, trade names, service marks or product names.
 
-## Grant of Future License
-
-We hereby irrevocably grant you an additional license to use the Software under
-the MIT license that is effective on the second anniversary of the date we make
-the Software available. On or after that date, you may use the Software under
-the MIT license, in which case the following will apply:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 

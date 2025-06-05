@@ -15,8 +15,7 @@ See [setup instructions][docker] for how to self-host Noton with Docker.
 ### License
 
 Noton is licensed under the _Functional Source License, Version 1.1, MIT Future License_. It's free to use for
-internal and non-commercial purposes, but it's not allowed to use a release for commercial purposes (competing use)
-until it's second anniversary. See our [full license][license] for more details.
+internal and non-commercial purposes, but it's not allowed to use a release for commercial purposes (competing use). See our [full license][license] for more details.
 
 ### Contributing
 
