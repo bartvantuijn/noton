@@ -13,6 +13,8 @@ if [ ! -f .env ]; then
   php artisan key:generate --force
 fi
 
+php artisan storage:link
+
 php artisan config:cache
 php artisan migrate --force
 
