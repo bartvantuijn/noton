@@ -25,7 +25,7 @@ services:
       APP_NAME: Noton
       APP_ENV: production
       APP_DEBUG: false
-      APP_URL: http://localhost
+      APP_URL: http://localhost:6686
       APP_LOCALE: nl
       DB_CONNECTION: pgsql
       DB_HOST: postgres

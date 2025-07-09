@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use Carbon\Carbon;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
@@ -30,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register custom colors
         $this->app->singleton('colors.primary', function () {
-            return '#3b82f6';
+            return Setting::singleton()->get('appearance.color') ?? '#3b82f6';
         });
     }
 

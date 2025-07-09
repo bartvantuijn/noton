@@ -49,10 +49,10 @@ RUN set -eux; \
 
 # Install extensions
 RUN apt-get update; apt-get install --no-install-recommends -y \
-    acl ssh git nano netcat-traditional libicu-dev caddy supervisor
+    acl ssh git nano netcat-traditional libicu-dev libzip-dev caddy supervisor
 
 # Enable extensions
-RUN docker-php-ext-install bcmath pdo_mysql intl exif
+RUN docker-php-ext-install bcmath pdo_mysql intl exif zip
 
 COPY --from=composer_build /usr/bin/composer /usr/bin/composer
 

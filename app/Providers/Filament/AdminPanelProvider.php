@@ -9,6 +9,7 @@ use App\Filament\Resources\PostResource;
 use App\Filament\Resources\UserResource;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Setting;
 use App\Models\User;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -49,10 +50,10 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::hex(app('colors.primary')),
             ])
             ->viteTheme('resources/css/app.css')
-            ->brandLogo(asset('images/logo.svg'))
+            ->brandLogo(fn () => Setting::singleton()->getFirstMediaUrl('logo') ?: secure_asset('images/logo.svg'))
             ->brandLogoHeight('2rem')
             ->homeUrl('/')
-            ->favicon(asset('images/favicon-96x96.png'))
+            ->favicon(fn () => Setting::singleton()->getFirstMediaUrl('logo') ?: secure_asset('images/favicon-96x96.png'))
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

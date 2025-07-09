@@ -4,15 +4,19 @@ namespace App\Filament\Pages;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Setting;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
-class Settings extends Page
+class Settings extends Page implements HasForms
 {
     use InteractsWithForms;
+
+    public Setting $setting;
 
     public ?array $data = [];
 
@@ -37,45 +41,29 @@ class Settings extends Page
 
     public function mount(): void
     {
+        $this->setting = Setting::singleton();
+
         $this->form->fill([
-            'data' => [
-                'categories' => Category::with('posts')->orderBy('sort')->get()
-                    ->map(fn ($category) => [
-                        'id' => $category->id,
-                        'name' => $category->name,
-                        'posts' => $category->posts()->orderBy('sort')->get()
-                            ->map(fn ($post) => [
-                                'id' => $post->id,
-                                'title' => $post->title,
-                            ]),
-                    ])
-            ]
+            'appearance' => $this->setting->get('appearance'),
+            'categories' => Category::with('posts')->orderBy('sort')->get()
+                ->map(fn ($category) => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'posts' => $category->posts()->orderBy('sort')->get()
+                        ->map(fn ($post) => [
+                            'id' => $post->id,
+                            'title' => $post->title,
+                        ]),
+                ])
         ]);
     }
 
     public function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Repeater::make('data.categories')
-                    ->label(__('Categories'))
-                    ->addable(false)
-                    ->deletable(false)
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->hiddenLabel()
-                            ->disabled(),
-                        Forms\Components\Repeater::make('posts')
-                            ->label(__('Posts'))
-                            ->addable(false)
-                            ->deletable(false)
-                            ->schema([
-                                Forms\Components\TextInput::make('title')
-                                    ->hiddenLabel()
-                                    ->disabled(),
-                            ])
-                    ])
-            ])->statePath('data');
+            ->model($this->setting)
+            ->statePath('data')
+            ->schema($this->getFormSchema());
     }
 
     protected function getFormActions(): array
@@ -87,9 +75,51 @@ class Settings extends Page
         ];
     }
 
+    protected function getFormSchema(): array
+    {
+        return [
+            Forms\Components\Section::make(__('Appearance'))
+                ->schema([
+                    Forms\Components\ColorPicker::make('appearance.color')
+                        ->label(__('Color')),
+
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('appearance.logo')
+                        ->label(__('Logo'))
+                        ->collection('logo')
+                        ->downloadable()
+                ]),
+
+            Forms\Components\Repeater::make('categories')
+                ->label(__('Categories'))
+                ->addable(false)
+                ->deletable(false)
+                ->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->hiddenLabel()
+                        ->disabled(),
+                    Forms\Components\Repeater::make('posts')
+                        ->label(__('Posts'))
+                        ->addable(false)
+                        ->deletable(false)
+                        ->schema([
+                            Forms\Components\TextInput::make('title')
+                                ->hiddenLabel()
+                                ->disabled(),
+                        ])
+                ])
+        ];
+    }
+
     public function save(): void
     {
-        $categories = $this->form->getState()['data']['categories'] ?? [];
+        $this->setting = Setting::singleton();
+
+        $state = $this->form->getState();
+
+        $appearance = $state['appearance'] ?? [];
+        $categories = $state['categories'] ?? [];
+
+        $this->setting->set('appearance', $appearance);
 
         foreach ($categories as $categoryIndex => $categoryData) {
             $category = Category::find($categoryData['id']);
