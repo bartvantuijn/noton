@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4](https://github.com/bartvantuijn/noton/compare/v0.1.3...v0.1.4) (2025-10-07)
+
+* Improve HTTPS scheme forcing
+* Add settings to navigation
+* Add general improvements
+
 ## [0.1.3](https://github.com/bartvantuijn/noton/compare/v0.1.2...v0.1.3) (2025-09-07)
 
 * Make shell scripts executable

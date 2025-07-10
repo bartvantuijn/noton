@@ -16,7 +16,11 @@ fi
 # Create storage symlink
 php artisan storage:link
 
-php artisan config:cache
+# Set up storage permissions
+# setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX storage
+# setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX storage
+
+# Run migrations
 php artisan migrate --force
 
 # Clear cache
