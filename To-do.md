@@ -1,7 +1,6 @@
 # To-do
 
 - Update screenshots
-- Implement GitHub actions
 - Add initial user configuration
 - AI integration
 - Copy code snippets
