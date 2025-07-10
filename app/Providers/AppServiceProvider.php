@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         // Force HTTPS scheme
         if (!app()->environment('local')) {
             URL::forceScheme('https');
+            request()->headers->set('X-Forwarded-Proto', 'https');
         }
 
         // Register custom assets

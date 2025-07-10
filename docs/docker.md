@@ -23,8 +23,8 @@ services:
       - noton
     environment:
       APP_NAME: Noton
-      APP_ENV: production
-      APP_DEBUG: false
+      APP_ENV: local
+      APP_DEBUG: true
       APP_URL: http://localhost:6686
       APP_LOCALE: nl
       DB_CONNECTION: pgsql
@@ -80,20 +80,23 @@ You can customize the database credentials or switch to MySQL by editing the `do
 Key settings such as the application environment, URL, and database credentials can be customized via environment variables in your `docker-compose.yaml` file. Below are some commonly used variables:
 
 - `APP_NAME`: The name of the application (displayed in the UI).
-- `APP_ENV`: `production` or `local`, determines how the application behaves.
+- `APP_ENV`: `local` or `production`, determines how the application behaves.
 - `APP_DEBUG`: `true` to enable debug mode.
 - `APP_URL`: The base URL where your app will be hosted (e.g. `https://noton.example.com`).
 - `APP_LOCALE`: The default locale (e.g. `nl`, `en`).
 - `DB_*`: Database connection settings (host, port, user, password, etc.).
 
+> Please note that when `APP_ENV` is **not** set to `local`, Noton automatically treats all incoming requests as HTTPS
+
 ## Custom Domains and SSL
 
-If you're deploying behind a reverse proxy like Traefik, make sure:
+If you're deploying behind a reverse proxy like Traefik or Nginx, make sure:
 
 - The container exposes port `6686`
 - You provide the correct labels for routing (see Traefik documentation)
 - Your external Docker network is referenced correctly in `docker-compose.yaml`
 - The `APP_URL` environment variable matches the public domain, for example: `APP_URL=https://noton.example.com`
+- The `APP_ENV` environment variable is **not** set to `local` so that HTTPS behavior is enforced by the application
 
 Additionally, make sure:
 

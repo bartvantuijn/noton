@@ -10,4 +10,5 @@
 - Add favicon
 - Upgrade to Filament v4
 - Refactor Dashboard
+- Improve HTTPS scheme forcing
 - Improve documentation
