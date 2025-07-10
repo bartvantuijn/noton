@@ -98,6 +98,7 @@ class AdminPanelProvider extends PanelProvider
             ->when(Gate::allows('viewAny', Category::class), fn ($builder) => $builder->items(CategoryResource::getNavigationItems()))
             ->when(Gate::allows('viewAny', Post::class), fn ($builder) => $builder->items(PostResource::getNavigationItems()))
             ->when(Gate::allows('viewAny', User::class), fn ($builder) => $builder->items(UserResource::getNavigationItems()))
+            ->when(Gate::allows('viewAny', Setting::class), fn ($builder) => $builder->items(Settings::getNavigationItems()))
             ->groups(
                 Category::with(['posts' => fn ($posts) => $posts->orderBy('sort')])
                     ->orderBy('sort')
