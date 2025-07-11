@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
+
+/* Hide scrollbar for Webkit (Chrome, Safari) */
+#chat::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
+#chat {
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+}

@@ -1,6 +1,14 @@
 $(document).ready(function () {
     console.log('jQuery is ready!');
 
+    // Scroll chat modal
+    Livewire.on('scroll-chat-modal', () => {
+        setTimeout(() => {
+            const $el = $('#chat');
+            $el.animate({ scrollTop: $el[0].scrollHeight }, 500);
+        }, 250);
+    });
+
     // Copy code snippets
     $('pre > code').each(function () {
         const $code = $(this);

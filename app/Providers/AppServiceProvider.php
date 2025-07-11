@@ -59,6 +59,12 @@ class AppServiceProvider extends ServiceProvider
             'translations' => File::json(lang_path('nl.json')),
         ]);
 
+        // Register chat render hook
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn (): string => Blade::render('@livewire(\'chat-modal\')'),
+        );
+
         // Register login render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::TOPBAR_END,

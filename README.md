@@ -25,8 +25,10 @@ This project is under active development. Contributions are welcome.
 
 ## Screenshots
 
-![Screenshot](screenshots/noton-post.png)
-![Screenshot](screenshots/noton-post-edit.png)
+![Screenshot](screenshots/screenshot.png)
+![Screenshot](screenshots/screenshot(1).png)
+![Screenshot](screenshots/screenshot(2).png)
+![Screenshot](screenshots/screenshot(3).png)
 
 [laravel]: https://laravel.com
 [filament]: https://filamentphp.com

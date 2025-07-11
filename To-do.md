@@ -1,10 +1,10 @@
 # To-do
 
-- Update screenshots
 - Add initial user configuration
 - Add mail support
-- AI integration
 - Test reset password functionality
+- AI integration
+- Copy code snippets layout as in ChatGPT
 - Change Noton volume to /srv/www/storage/app
 - Improve script logging
 - Code blocks syntax highlighting

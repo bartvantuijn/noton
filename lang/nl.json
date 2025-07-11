@@ -14,6 +14,8 @@
     "Color": "Kleur",
     "There must be at least one admin.": "Er moet minstens één beheerder zijn.",
     "Settings saved successfully.": "Instellingen succesvol opgeslagen.",
+    "Chat with Noton": "Chat met Noton",
+    "Message Noton": "Bericht Noton",
 
     "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json": "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json",
     "(and :count more error)": "(en :count andere foutmelding)",
