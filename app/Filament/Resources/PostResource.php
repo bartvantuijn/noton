@@ -15,6 +15,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PostResource extends Resource
@@ -45,8 +46,39 @@ class PostResource extends Resource
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
+        // Get search query
+        $query = collect(request('components'))
+            ->pluck('updates.search')
+            ->filter()
+            ->first();
+
+        // Strip HTML
+        $text = strip_tags($record->content);
+
+        // Find match position
+        $position = stripos($text, $query);
+
+        // Return if nothing was found
+        if ($position === false) {
+            return [];
+        }
+
+        // Determine snippet start
+        $length = 100;
+        $start = max(0, $position - ($length / 2));
+
+        // Extract content snippet
+        $snippet = mb_substr($text, $start, $length + mb_strlen($query));
+
+        // Highlight matched text
+        $highlighted = preg_replace(
+            '/' . preg_quote($query, '/') . '/i',
+            '<strong>$0</strong>',
+            e($snippet)
+        );
+
         return [
-            __('Category') => $record->category->name
+            new HtmlString($highlighted),
         ];
     }
 

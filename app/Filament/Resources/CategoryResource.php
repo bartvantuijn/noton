@@ -44,6 +44,13 @@ class CategoryResource extends Resource
         return $record->name;
     }
 
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            __('Posts') => $record->posts->count(),
+        ];
+    }
+
     public static function getGlobalSearchResultUrl(Model $record): string
     {
         return static::getUrl('view', ['record' => $record]);

@@ -43,6 +43,13 @@ class UserResource extends Resource
         return $record->name;
     }
 
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            __('Email') => $record->email
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
