@@ -1,4 +1,6 @@
-# Noton
+<p align="center">
+    <img src="public/images/logo.svg" width="250" alt="Noton Logo">
+</p>
 
 A free and open documentation platform built with [Laravel][laravel] and [Filament][filament], focused on clarity, structure, and self-hosted simplicity.
 

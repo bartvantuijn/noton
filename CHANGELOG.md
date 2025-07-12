@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.5](https://github.com/bartvantuijn/noton/compare/v0.1.4...v0.1.5) (2025-13-07)
+
+* Copy code snippets
+* Add `ChatModal.php`
+* Improve search results
+* Add persistence and fix permissions
+* Add initial user registration
+* General improvements
+* Rebrand application
+
 ## [0.1.4](https://github.com/bartvantuijn/noton/compare/v0.1.3...v0.1.4) (2025-10-07)
 
 * Improve HTTPS scheme forcing

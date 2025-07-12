@@ -9,7 +9,7 @@ export default {
     ],
     theme: {
         fontFamily: {
-            sans: ['Montserrat', 'sans-serif'],
+            sans: ['Exo', 'sans-serif'],
         },
     },
 }
