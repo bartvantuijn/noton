@@ -12,7 +12,7 @@ services:
       APP_ENV: local
       APP_DEBUG: true
       APP_URL: http://localhost:6686
-      APP_LOCALE: nl
+      APP_LOCALE: en
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
@@ -20,7 +20,7 @@ services:
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
     volumes:
-      - ./storage:/srv/www/storage
+      - ./noton-data/uploads:/srv/www/storage/app/public
 
   postgres:
     container_name: postgres

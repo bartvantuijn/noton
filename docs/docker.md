@@ -34,7 +34,7 @@ services:
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
     volumes:
-      - ./storage:/srv/www/storage
+      - ./noton-data/uploads:/srv/www/storage/app/public
 
   postgres:
     container_name: postgres
@@ -109,10 +109,14 @@ docker compose logs -f noton
 
 ## Volumes
 
-For persistence, the app uses:
+To ensure persistent storage, the following host directories should be mounted:
 
-- `./storage` for application storage
-- `./postgres-data` or `./mysql-data` for database data
+```yaml
+volumes:
+  - ./noton-data/uploads:/srv/www/storage/app/public
+```
+
+Additionally, make sure to use `./postgres-data` or `./mysql-data` for database data.
 
 ## Updating
 

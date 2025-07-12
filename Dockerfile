@@ -49,7 +49,7 @@ RUN set -eux; \
 
 # Install extensions
 RUN apt-get update; apt-get install --no-install-recommends -y \
-    acl ssh git nano netcat-traditional libicu-dev libzip-dev caddy supervisor
+    acl gosu ssh git nano netcat-traditional libicu-dev libzip-dev caddy supervisor
 
 # Enable extensions
 RUN docker-php-ext-install bcmath pdo_mysql intl exif zip
@@ -83,5 +83,7 @@ RUN chmod +x /srv/www/docker/entrypoint.sh /srv/www/docker/process/*.sh
 # Generate autoloader
 RUN composer dump-autoload --classmap-authoritative --no-ansi --no-interaction
 
+# Finish build
 EXPOSE 6686
+USER root
 ENTRYPOINT ["/srv/www/docker/entrypoint.sh"]

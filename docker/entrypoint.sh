@@ -17,8 +17,8 @@ fi
 php artisan storage:link
 
 # Set up storage permissions
-# setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX storage
-# setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX storage
+setfacl -R -m u:noton:rwX storage/app/public bootstrap/cache
+setfacl -dR -m u:noton:rwX storage/app/public bootstrap/cache
 
 # Run migrations
 php artisan migrate --force
@@ -34,4 +34,4 @@ if [ "$APP_ENV" != "local" ]; then
 fi
 
 # Start supervisord
-exec supervisord -c /srv/www/docker/config/supervisord.conf
+exec gosu noton supervisord -c /srv/www/docker/config/supervisord.conf
