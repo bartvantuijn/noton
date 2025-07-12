@@ -7,6 +7,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Inspiring;
 use Livewire\Component;
 
 class ChatModal extends Component implements HasForms
@@ -45,7 +46,9 @@ class ChatModal extends Component implements HasForms
 
         $this->messages[] = [
             'key' => 'assistant',
-            'value' => __('AI integration coming soon...'),
+            'value' => __('AI integration is coming soon. In the meantime, here\'s an inspiring quote!<br><br>:quote', [
+                'quote' => Inspiring::quote(),
+            ]),
         ];
 
         $this->form->fill();
