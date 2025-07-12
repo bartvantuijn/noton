@@ -40,9 +40,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('')
-            ->login()
-            //->registration()
-            ->passwordReset()
+            ->when(App::hasUsers(), fn ($panel) => $panel->login(Login::class))
+            ->when(!App::hasUsers(), fn ($panel) => $panel->registration(Register::class))
+            //->passwordReset()
             ->emailVerification(isRequired: false)
             ->profile(isSimple: false)
             ->font('Montserrat')
@@ -75,6 +75,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                RedirectToRegistration::class,
             ])
             ->authMiddleware([
                 //Authenticate::class,

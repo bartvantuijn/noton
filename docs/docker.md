@@ -66,6 +66,10 @@ docker compose up -d
 http://localhost:6686
 ```
 
+4. Register the first user
+
+> This account will automatically be assigned the admin role
+
 ## Configuration
 
 The default `docker-compose.yaml` uses:

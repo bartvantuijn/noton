@@ -57,4 +57,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     {
         return $this->role === 'admin';
     }
+
+    public function isLastAdmin(): bool
+    {
+        return $this->isAdmin() && static::where('role', 'admin')->count() === 1;
+    }
 }

@@ -8,7 +8,9 @@ use App\Models\User;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
+use Filament\Pages\Auth\EditProfile;
 use Filament\Resources\Resource;
 use Filament\Support\Exceptions\Halt;
 use Filament\Tables;
@@ -67,17 +69,24 @@ class UserResource extends Resource
                     ->searchable()
                     ->preload()
                     ->options([
-                        'user' => __('User'),
                         'admin' => __('Admin'),
-                    ])
-                    ->rules([
-                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
-                            if ($value !== 'admin' && User::where('role', 'admin')->count() === 1) {
-                                $fail(__('There must be at least one admin.'));
-                            }
-                        },
+                        'user' => __('User'),
                     ])
                     ->columnSpan('full'),
+                Forms\Components\TextInput::make('password')
+                    ->label(__('Password'))
+                    ->required(fn (string $context) => $context === 'create')
+                    ->password()
+                    ->revealable()
+                    ->autocomplete('new-password')
+                    ->confirmed()
+                    ->dehydrated(fn ($state) => filled($state)),
+                Forms\Components\TextInput::make('password_confirmation')
+                    ->label(__('Confirm password'))
+                    ->required(fn (string $context) => $context === 'create')
+                    ->password()
+                    ->revealable()
+                    ->dehydrated(false),
             ]);
     }
 
@@ -109,11 +118,12 @@ class UserResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->before(function (Tables\Actions\DeleteAction $action, User $record) {
-                        if ($record->isAdmin() && User::where('role', 'admin')->count() === 1) {
+                        if ($record->isLastAdmin()) {
                             Notification::make()
                                 ->title(__('There must be at least one admin.'))
                                 ->danger()
                                 ->send();
+
                             $action->cancel();
                         }
                     }),

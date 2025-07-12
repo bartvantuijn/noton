@@ -59,12 +59,6 @@ class AppServiceProvider extends ServiceProvider
             'translations' => File::json(lang_path('nl.json')),
         ]);
 
-        // Register chat render hook
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-            fn (): string => Blade::render('@livewire(\'chat-modal\')'),
-        );
-
         // Register login render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::TOPBAR_END,
@@ -75,6 +69,24 @@ class AppServiceProvider extends ServiceProvider
                 </x-filament::button>
             @endguest
             '),
+        );
+
+        // Register login render hook
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
+            fn (): string => Blade::render('@livewire(\App\Filament\Widgets\NotonWidget::class)'),
+        );
+
+        // Register register render hook
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::AUTH_REGISTER_FORM_BEFORE,
+            fn (): string => Blade::render('@livewire(\App\Filament\Widgets\NotonWidget::class)'),
+        );
+
+        // Register chat render hook
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+            fn (): string => Blade::render('@livewire(\App\Livewire\ChatModal::class)'),
         );
     }
 }
