@@ -23,9 +23,11 @@ class PostFactory extends Factory
                 fake()->paragraph(),
                 '> ' . fake()->sentence(),
                 '## ' . ucfirst(fake()->words(3, true)),
-                '```php',
-                'echo "Hello world!";',
-                '```',
+                $php = '```php
+<?php
+    echo "Hello Noton!";
+?>
+```',
                 fake()->paragraph(),
                 '- ' . ucfirst(fake()->words(3, true)),
                 '- ' . ucfirst(fake()->words(3, true)),

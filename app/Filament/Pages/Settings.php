@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Helpers\App;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Setting;
@@ -79,32 +80,46 @@ class Settings extends Page implements HasForms
     {
         return [
             Forms\Components\Section::make(__('Appearance'))
+                ->collapsible()
                 ->schema([
                     Forms\Components\ColorPicker::make('appearance.color')
-                        ->label(__('Color')),
+                        ->label(__('Color'))
+                        ->columnSpanFull(),
 
                     Forms\Components\SpatieMediaLibraryFileUpload::make('appearance.logo')
                         ->label(__('Logo'))
                         ->collection('logo')
-                        ->downloadable()
-                ]),
+                        ->imagePreviewHeight(200)
+                        ->downloadable(),
 
-            Forms\Components\Repeater::make('categories')
-                ->label(__('Categories'))
-                ->addable(false)
-                ->deletable(false)
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('appearance.favicon')
+                        ->label(__('Favicon'))
+                        ->collection('favicon')
+                        ->imagePreviewHeight(200)
+                        ->downloadable(),
+                ])->columns(3),
+
+            Forms\Components\Section::make(__('Categories'))
+                ->collapsible()
+                ->visible(fn () => App::hasCategories())
                 ->schema([
-                    Forms\Components\TextInput::make('name')
+                    Forms\Components\Repeater::make('categories')
                         ->hiddenLabel()
-                        ->disabled(),
-                    Forms\Components\Repeater::make('posts')
-                        ->label(__('Posts'))
                         ->addable(false)
                         ->deletable(false)
                         ->schema([
-                            Forms\Components\TextInput::make('title')
+                            Forms\Components\TextInput::make('name')
                                 ->hiddenLabel()
                                 ->disabled(),
+                            Forms\Components\Repeater::make('posts')
+                                ->label(__('Posts'))
+                                ->addable(false)
+                                ->deletable(false)
+                                ->schema([
+                                    Forms\Components\TextInput::make('title')
+                                        ->hiddenLabel()
+                                        ->disabled(),
+                                ])
                         ])
                 ])
         ];
