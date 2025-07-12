@@ -2,11 +2,15 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
+use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\Settings;
 use App\Filament\Resources\CategoryResource;
 use App\Filament\Resources\PostResource;
 use App\Filament\Resources\UserResource;
+use App\Helpers\App;
+use App\Http\Middleware\RedirectToRegistration;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Setting;
