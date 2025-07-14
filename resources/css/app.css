@@ -13,3 +13,8 @@
     scrollbar-width: none;
     -ms-overflow-style: none; /* IE and Edge */
 }
+
+/* Add custom color for mark element */
+mark {
+    background-color: rgba(var(--primary-500), 1);
+}

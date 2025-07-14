@@ -1,6 +1,21 @@
 $(document).ready(function () {
     console.log('jQuery is ready!');
 
+    // Highlight search query
+    $(function() {
+        const highlight = new URLSearchParams(window.location.search).get('query');
+
+        if (highlight) {
+            const content = $('#content');
+
+            if (content.length) {
+                const regex = new RegExp(`(${highlight})`, 'gi');
+                const newHtml = content.html().replace(regex, '<mark>$1</mark>');
+                content.html(newHtml);
+            }
+        }
+    });
+
     // Scroll chat modal
     Livewire.on('scroll-chat-modal', () => {
         setTimeout(() => {

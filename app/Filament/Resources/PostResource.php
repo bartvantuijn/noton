@@ -73,7 +73,7 @@ class PostResource extends Resource
         // Highlight matched text
         $highlighted = preg_replace(
             '/' . preg_quote($query, '/') . '/i',
-            '<strong>$0</strong>',
+            '<mark>$0</mark>',
             e($snippet)
         );
 
@@ -84,7 +84,13 @@ class PostResource extends Resource
 
     public static function getGlobalSearchResultUrl(Model $record): string
     {
-        return static::getUrl('view', ['record' => $record]);
+        // Get search query
+        $query = collect(request('components'))
+            ->pluck('updates.search')
+            ->filter()
+            ->first();
+
+        return static::getUrl('view', ['record' => $record, 'query' => $query]);
     }
 
     public static function infolist(Infolist $infolist): Infolist
@@ -103,7 +109,8 @@ class PostResource extends Resource
                         Infolists\Components\TextEntry::make('content')
                             ->hiddenLabel()
                             ->markdown()
-                            ->formatStateUsing(fn ($state) => Str::markdown($state)),
+                            ->formatStateUsing(fn ($state) => Str::markdown($state))
+                            ->extraAttributes(['id' => 'content']),
                     ]),
             ]);
     }
