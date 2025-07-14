@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.6](https://github.com/bartvantuijn/noton/compare/v0.1.5...v0.1.6) (2025-14-07)
+
+* Highlight search query
+* Add general improvements
+
 ## [0.1.5](https://github.com/bartvantuijn/noton/compare/v0.1.4...v0.1.5) (2025-13-07)
 
 * Copy code snippets
@@ -7,7 +12,7 @@
 * Improve search results
 * Add persistence and fix permissions
 * Add initial user registration
-* General improvements
+* Add general improvements
 * Rebrand application
 
 ## [0.1.4](https://github.com/bartvantuijn/noton/compare/v0.1.3...v0.1.4) (2025-10-07)
