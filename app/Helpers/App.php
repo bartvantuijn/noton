@@ -10,7 +10,7 @@ class App
     public static function hasUsers(): bool
     {
         try {
-            return User::count() > 0;
+            return User::exists();
         } catch (\Throwable $e) {
             return false;
         }
@@ -19,7 +19,7 @@ class App
     public static function hasCategories(): bool
     {
         try {
-            return Category::count() > 0;
+            return Category::exists();
         } catch (\Throwable $e) {
             return false;
         }

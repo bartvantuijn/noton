@@ -17,8 +17,14 @@ class RedirectToRegistration
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Redirect to registration
         if (!App::hasUsers() && !$request->routeIs('filament.admin.auth.register')) {
             return redirect()->route('filament.admin.auth.register');
+        }
+
+        // Redirect from registration
+        if (App::hasUsers() && $request->routeIs('filament.admin.auth.register')) {
+            return redirect()->route('filament.admin.auth.login');
         }
 
         return $next($request);
