@@ -73,7 +73,7 @@ class PostResource extends Resource
         // Highlight matched text
         $highlighted = preg_replace(
             '/' . preg_quote($query, '/') . '/i',
-            '<mark>$0</mark>',
+            '<mark class="bg-primary-500">$0</mark>',
             e($snippet)
         );
 

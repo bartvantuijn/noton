@@ -10,8 +10,15 @@ $(document).ready(function () {
 
             if (content.length) {
                 const regex = new RegExp(`(${highlight})`, 'gi');
-                const newHtml = content.html().replace(regex, '<mark>$1</mark>');
+                const newHtml = content.html().replace(regex, '<mark class="bg-primary-500">$1</mark>');
                 content.html(newHtml);
+            }
+
+            const match = content.find('mark').first();
+
+            if (match.length) {
+                const offset = match.offset().top - ($(window).height() / 2) + (match.outerHeight() / 2);
+                $('html, body').animate({scrollTop: offset}, 500);
             }
         }
     });
