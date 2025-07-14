@@ -52,11 +52,17 @@ class PostResource extends Resource
             ->filter()
             ->first();
 
-        // Strip HTML
-        $text = strip_tags($record->content);
+        // Parse record content
+        $content = Str::markdown($record->content);
+
+        // Strip HTML tags
+        $content = strip_tags($content);
+
+        // Decode HTML entities
+        $content = html_entity_decode($content);
 
         // Find match position
-        $position = stripos($text, $query);
+        $position = stripos($content, $query);
 
         // Return if nothing was found
         if ($position === false) {
@@ -68,7 +74,7 @@ class PostResource extends Resource
         $start = max(0, $position - ($length / 2));
 
         // Extract content snippet
-        $snippet = mb_substr($text, $start, $length + mb_strlen($query));
+        $snippet = mb_substr($content, $start, $length + mb_strlen($query));
 
         // Highlight matched text
         $highlighted = preg_replace(

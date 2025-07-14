@@ -10,7 +10,9 @@ $(document).ready(function () {
 
             if (content.length) {
                 const regex = new RegExp(`(${highlight})`, 'gi');
-                const newHtml = content.html().replace(regex, '<mark class="bg-primary-500">$1</mark>');
+                const newHtml = content.html().replace(/>([^<]*)</g, function (match, text) {
+                    return '>' + text.replace(regex, '<mark class="bg-primary-500">$1</mark>') + '<';
+                });
                 content.html(newHtml);
             }
 
