@@ -112,6 +112,9 @@ class PostResource extends Resource
                             ->visible(fn () => auth()->check()),
                     ])
                     ->schema([
+                        Infolists\Components\SpatieTagsEntry::make('tags')
+                            ->hiddenLabel()
+                            ->visible(fn(Post $post) => $post->tags()->exists()),
                         Infolists\Components\TextEntry::make('content')
                             ->hiddenLabel()
                             ->markdown()
@@ -135,6 +138,9 @@ class PostResource extends Resource
                     ->relationship(name: 'category', titleAttribute: 'name')
                     ->searchable()
                     ->preload(),
+                Forms\Components\SpatieTagsInput::make('tags')
+                    ->reorderable()
+                    ->columnSpan('full'),
                 Forms\Components\MarkdownEditor::make('content')
                     ->required()
                     ->columnSpan('full'),

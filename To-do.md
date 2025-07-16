@@ -1,5 +1,6 @@
 # To-do
 
+- Fix reordering of tags
 - AI integration
 - Copy code snippets layout as in ChatGPT
 - Improve script logging
