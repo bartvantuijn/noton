@@ -12,6 +12,13 @@ class ViewPost extends ViewRecord
 {
     protected static string $resource = PostResource::class;
 
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        $this->record->increment('visits');
+    }
+
     public function getBreadcrumbs(): array
     {
         $breadcrumbs = [
