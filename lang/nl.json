@@ -17,6 +17,9 @@
     "Chat with Noton": "Chat met Noton",
     "Message Noton": "Bericht Noton",
     "Confirm password": "Bevestig wachtwoord",
+    ":count this month": ":count deze maand",
+    "Most viewed posts": "Meest bekeken berichten",
+    "Here you will find the most viewed posts.": "Hier vind je de meest bekeken berichten.",
 
     "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json": "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json",
     "(and :count more error)": "(en :count andere foutmelding)",

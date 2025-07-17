@@ -52,39 +52,8 @@ class PostResource extends Resource
             ->filter()
             ->first();
 
-        // Parse record content
-        $content = Str::markdown($record->content);
-
-        // Strip HTML tags
-        $content = strip_tags($content);
-
-        // Decode HTML entities
-        $content = html_entity_decode($content);
-
-        // Find match position
-        $position = stripos($content, $query);
-
-        // Return if nothing was found
-        if ($position === false) {
-            return [];
-        }
-
-        // Determine snippet start
-        $length = 100;
-        $start = max(0, $position - ($length / 2));
-
-        // Extract content snippet
-        $snippet = mb_substr($content, $start, $length + mb_strlen($query));
-
-        // Highlight matched text
-        $highlighted = preg_replace(
-            '/' . preg_quote($query, '/') . '/i',
-            '<mark class="bg-primary-500">$0</mark>',
-            e($snippet)
-        );
-
         return [
-            new HtmlString($highlighted),
+            $record->summary(100, $query),
         ];
     }
 
@@ -120,6 +89,11 @@ class PostResource extends Resource
                             ->markdown()
                             ->formatStateUsing(fn ($state) => Str::markdown($state))
                             ->extraAttributes(['id' => 'content']),
+                        Infolists\Components\TextEntry::make('views')
+                            ->hiddenLabel()
+                            ->badge()
+                            ->color('gray')
+                            ->icon('heroicon-o-eye'),
                     ]),
             ]);
     }

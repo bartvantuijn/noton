@@ -18,6 +18,8 @@ class TagFactory extends Factory
     {
         return [
             'name' => ucfirst(fake()->word()),
+            'created_at' => $created = fake()->dateTimeBetween('-1 years'),
+            'updated_at' => fake()->dateTimeBetween($created),
         ];
     }
 }

@@ -33,6 +33,8 @@ class PostFactory extends Factory
                 '- ' . ucfirst(fake()->words(3, true)),
                 '- ' . ucfirst(fake()->words(3, true)),
             ]),
+            'created_at' => $created = fake()->dateTimeBetween('-1 years'),
+            'updated_at' => fake()->dateTimeBetween($created),
         ];
     }
 }

@@ -18,6 +18,8 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => ucwords(fake()->words(2, true)),
+            'created_at' => $created = fake()->dateTimeBetween('-1 years'),
+            'updated_at' => fake()->dateTimeBetween($created),
         ];
     }
 }

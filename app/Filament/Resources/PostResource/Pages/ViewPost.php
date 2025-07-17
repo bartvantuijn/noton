@@ -16,7 +16,7 @@ class ViewPost extends ViewRecord
     {
         parent::mount($record);
 
-        $this->record->increment('visits');
+        $this->record->increment('views');
     }
 
     public function getBreadcrumbs(): array

@@ -2,7 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\MostViewedPosts;
 use App\Filament\Widgets\NotonWidget;
+use App\Filament\Widgets\StatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -28,6 +30,8 @@ class Dashboard extends BaseDashboard
     {
         return [
             NotonWidget::class,
+            StatsOverview::class,
+            MostViewedPosts::class,
         ];
     }
 }
