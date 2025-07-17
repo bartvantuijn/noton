@@ -14,7 +14,7 @@ class MostViewedPosts extends Widget
     public function getViewData(): array
     {
         return [
-            'posts' => Post::mostViewed()->take(8)->get(),
+            'posts' => Post::with('tags')->mostViewed(8)->get(),
         ];
     }
 }

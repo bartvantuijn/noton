@@ -127,10 +127,25 @@ class PostResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label(__('Title'))
-                    ->searchable(),
+                    ->searchable()
+                    ->description(fn (Post $post): string => $post->summary(50)),
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->label(__('Tags'))
+                    ->searchable()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('views')
+                    ->label(__('Views'))
+                    ->sortable()
+                    ->badge()
+                    ->color('gray')
+                    ->icon('heroicon-o-eye'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('tags')
+                    ->label(__('Tags'))
+                    ->searchable()
+                    ->preload()
+                    ->relationship('tags', 'name'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

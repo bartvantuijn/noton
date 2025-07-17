@@ -20,9 +20,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        $tags = Tag::factory(10)->create();
+
         Category::factory(3)
             ->has(Post::factory(4)
-                ->has(Tag::factory(3))
+                ->afterCreating(function (Post $post) use ($tags) {
+                    $post->attachTags($tags->random(3));
+                })
             )
             ->create();
     }

@@ -20,6 +20,7 @@
     ":count this month": ":count deze maand",
     "Most viewed posts": "Meest bekeken berichten",
     "Here you will find the most viewed posts.": "Hier vind je de meest bekeken berichten.",
+    "Views": "Weergaven",
 
     "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json": "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json",
     "(and :count more error)": "(en :count andere foutmelding)",

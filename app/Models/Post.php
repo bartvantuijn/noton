@@ -16,9 +16,9 @@ class Post extends Model
     use HasFactory, HasTags;
 
     #[Scope]
-    protected function mostViewed(Builder $query): void
+    protected function mostViewed(Builder $query, int $limit = 1): void
     {
-        $query->orderBy('views', 'desc');
+        $query->orderBy('views', 'desc')->take($limit);
     }
 
     public function category(): BelongsTo

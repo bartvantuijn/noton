@@ -22,10 +22,20 @@
                 <x-filament::section>
                     <x-slot name="heading">{{ $post->title }}</x-slot>
                     <x-slot name="headerEnd">
-                        <x-filament::badge icon="heroicon-o-eye">
+                        <x-filament::badge icon="heroicon-o-eye" color="gray">
                             {{ $post->views }}
                         </x-filament::badge>
                     </x-slot>
+
+                    @if($post->tags->count())
+                        <div class="flex gap-4 mb-4">
+                            @foreach($post->tags as $tag)
+                                <x-filament::badge>
+                                    {{ $tag->name }}
+                                </x-filament::badge>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ $post->summary() }}</p>
 
