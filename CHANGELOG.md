@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/bartvantuijn/noton/compare/v0.1.6...v0.1.7) (2025-17-07)
+
+* Improve search result details and query highlighting
+* Add tags to posts
+* Register post visits
+* Add widgets to dashboard and improve layout
+
 ## [0.1.6](https://github.com/bartvantuijn/noton/compare/v0.1.5...v0.1.6) (2025-14-07)
 
 * Highlight search query
