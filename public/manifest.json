@@ -1,0 +1,15 @@
+{
+    "name": "Noton",
+    "short_name": "Noton",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "icons": [
+        {
+            "purpose": "any",
+            "sizes": "512x512",
+            "src": "/icons/icon-512x512.png",
+            "type": "image/png"
+        }
+    ]
+}

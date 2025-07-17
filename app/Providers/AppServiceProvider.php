@@ -59,6 +59,12 @@ class AppServiceProvider extends ServiceProvider
             'translations' => File::json(lang_path('nl.json')),
         ]);
 
+        // Register manifest
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::HEAD_START,
+            fn (): string => Blade::render('<link rel="manifest" href="{{ asset(\'manifest.json\') }}" />'),
+        );
+
         // Register login render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::TOPBAR_END,
