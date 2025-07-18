@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Phiki\CommonMark\PhikiExtension;
 
 class PostResource extends Resource
 {
@@ -87,7 +88,11 @@ class PostResource extends Resource
                         Infolists\Components\TextEntry::make('content')
                             ->hiddenLabel()
                             ->markdown()
-                            ->formatStateUsing(fn ($state) => Str::markdown($state))
+                            ->formatStateUsing(function ($state) {
+                                $theme = ($_COOKIE['theme'] ?? 'light') === 'dark' ? 'github-dark-default' : 'github-light-default';
+
+                                return Str::markdown($state, extensions: [new PhikiExtension($theme)]);
+                            })
                             ->extraAttributes(['id' => 'content']),
                         Infolists\Components\TextEntry::make('views')
                             ->hiddenLabel()

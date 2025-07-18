@@ -12,7 +12,8 @@
         "filament/spatie-laravel-tags-plugin": "^3.3",
         "flowframe/laravel-trend": "^0.4.0",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "phiki/phiki": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -1,6 +1,21 @@
 $(document).ready(function () {
     console.log('jQuery is ready!');
 
+    // Set theme cookie
+    $(function() {
+        const theme = $('html').hasClass('dark') ? 'dark' : 'light';
+        document.cookie = `theme=${theme}; path=/`;
+
+        const observer = new MutationObserver(() => {
+            const theme = $('html').hasClass('dark') ? 'dark' : 'light';
+            document.cookie = `theme=${theme}; path=/`;
+
+            location.reload();
+        });
+
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    });
+
     // Highlight search query
     $(function() {
         const highlight = new URLSearchParams(window.location.search).get('query');

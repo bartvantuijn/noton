@@ -13,3 +13,10 @@
     scrollbar-width: none;
     -ms-overflow-style: none; /* IE and Edge */
 }
+
+/* Wrap code snippet content  */
+pre, code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
