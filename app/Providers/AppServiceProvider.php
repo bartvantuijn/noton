@@ -62,7 +62,11 @@ class AppServiceProvider extends ServiceProvider
         // Register manifest
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_START,
-            fn (): string => Blade::render('<link rel="manifest" href="{{ asset(\'manifest.json\') }}" />'),
+            fn (): string => Blade::render('
+            <link rel="manifest" href="{{ asset(\'manifest.json\') }}" />
+            <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+            <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#18181b">
+            '),
         );
 
         // Register login render hook
