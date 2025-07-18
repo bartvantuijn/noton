@@ -7,7 +7,6 @@
     <x-filament::section icon="heroicon-o-eye" icon-color="primary">
 
         <x-slot name="heading">{{ __('Most viewed posts') }}</x-slot>
-        <x-slot name="description">{{ __('Here you will find the most viewed posts.') }}</x-slot>
 
         @if(Gate::allows('create', Post::class))
             <x-slot name="headerEnd">

@@ -111,7 +111,8 @@ class PostResource extends Resource
                     ->default(request('category_id'))
                     ->relationship(name: 'category', titleAttribute: 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->createOptionForm(CategoryResource::getFormSchema()),
                 Forms\Components\SpatieTagsInput::make('tags')
                     ->reorderable()
                     ->columnSpan('full'),

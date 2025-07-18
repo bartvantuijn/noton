@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.8](https://github.com/bartvantuijn/noton/compare/v0.1.7...v0.1.8) (2025-18-07)
+
+* Add widgets
+* Add manifest.json
+* Set theme colors
+* Automatically delete unused tags
+* Add general improvements
+
 ## [0.1.7](https://github.com/bartvantuijn/noton/compare/v0.1.6...v0.1.7) (2025-17-07)
 
 * Improve search result details and query highlighting

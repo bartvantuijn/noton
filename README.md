@@ -31,6 +31,7 @@ This project is under active development. Contributions are welcome.
 ![Screenshot](screenshots/screenshot(1).png)
 ![Screenshot](screenshots/screenshot(2).png)
 ![Screenshot](screenshots/screenshot(3).png)
+![Screenshot](screenshots/screenshot(4).png)
 
 [laravel]: https://laravel.com
 [filament]: https://filamentphp.com

@@ -84,12 +84,7 @@ class CategoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label(__('Name'))
-                    ->required()
-                    ->columnSpan('full'),
-            ]);
+            ->schema(self::getFormSchema());
     }
 
     public static function table(Table $table): Table
@@ -136,6 +131,16 @@ class CategoryResource extends Resource
             'create' => Pages\CreateCategory::route('/create'),
             'view' => Pages\ViewCategory::route('/{record}'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getFormSchema(): array
+    {
+        return [
+            Forms\Components\TextInput::make('name')
+                ->label(__('Name'))
+                ->required()
+                ->columnSpan('full'),
         ];
     }
 }
