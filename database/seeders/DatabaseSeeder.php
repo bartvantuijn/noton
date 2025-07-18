@@ -28,6 +28,6 @@ class DatabaseSeeder extends Seeder
                     $post->attachTags($tags->random(3));
                 })
             )
-            ->create();
+            ->createQuietly();
     }
 }
