@@ -36,7 +36,7 @@
                         </div>
                     @endif
 
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ $post->summary() }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ $post->summary()->toHtml() }}</p>
 
                     <x-filament::button :href="PostResource::getUrl('view', ['record' => $post])" tag="a" size="sm">
                         {{ __('View') }}

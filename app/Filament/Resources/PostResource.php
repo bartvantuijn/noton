@@ -89,9 +89,10 @@ class PostResource extends Resource
                             ->hiddenLabel()
                             ->markdown()
                             ->formatStateUsing(function ($state) {
-                                $theme = ($_COOKIE['theme'] ?? 'light') === 'dark' ? 'github-dark-default' : 'github-light-default';
-
-                                return Str::markdown($state, extensions: [new PhikiExtension($theme)]);
+                                return Str::markdown($state, extensions: [new PhikiExtension([
+                                    'light' => 'github-light-default',
+                                    'dark' => 'github-dark-default',
+                                ])]);
                             })
                             ->extraAttributes(['id' => 'content']),
                         Infolists\Components\TextEntry::make('views')

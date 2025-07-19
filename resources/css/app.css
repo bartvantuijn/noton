@@ -14,9 +14,19 @@
     -ms-overflow-style: none; /* IE and Edge */
 }
 
-/* Wrap code snippet content  */
+/* Wrap code snippet content */
 pre, code {
     white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: anywhere;
+}
+
+/* Phiki dark mode support  */
+html.dark .phiki,
+html.dark .phiki span {
+    color: var(--phiki-dark-color) !important;
+    background-color: var(--phiki-dark-background-color) !important;
+    font-style: var(--phiki-dark-font-style) !important;
+    font-weight: var(--phiki-dark-font-weight) !important;
+    text-decoration: var(--phiki-dark-text-decoration) !important;
 }
