@@ -21,7 +21,13 @@ pre, code {
     overflow-wrap: anywhere;
 }
 
-/* Phiki dark mode support  */
+/* Phiki styling */
+.phiki,
+.phiki span {
+    font-size: 12px;
+}
+
+/* Phiki dark mode support */
 html.dark .phiki,
 html.dark .phiki span {
     color: var(--phiki-dark-color) !important;
