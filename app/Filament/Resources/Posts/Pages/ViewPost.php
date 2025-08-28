@@ -18,7 +18,7 @@ class ViewPost extends ViewRecord
         ];
     }
 
-    public function mount(int|string $record): void
+    public function mount(int | string $record): void
     {
         parent::mount($record);
 
@@ -32,7 +32,7 @@ class ViewPost extends ViewRecord
         ];
 
         if ($category = $this->record->category) {
-            $breadcrumbs[CategoryResource::getUrl('view', ['record' => $category]) ] = $category->name;
+            $breadcrumbs[CategoryResource::getUrl('view', ['record' => $category])] = $category->name;
         }
 
         $breadcrumbs += parent::getBreadcrumbs();

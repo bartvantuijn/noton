@@ -28,7 +28,7 @@ class Settings extends Page
 
     public ?array $data = [];
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedCog;
 
     protected function getHeaderActions(): array
     {
@@ -63,15 +63,15 @@ class Settings extends Page
         $this->form->fill([
             'appearance' => $this->setting->get('appearance'),
             'categories' => Category::with('posts')->orderBy('sort')->get()
-                ->map(fn($category) => [
+                ->map(fn ($category) => [
                     'id' => $category->id,
                     'name' => $category->name,
                     'posts' => $category->posts()->orderBy('sort')->get()
-                        ->map(fn($post) => [
+                        ->map(fn ($post) => [
                             'id' => $post->id,
                             'title' => $post->title,
                         ]),
-                ])
+                ]),
         ]);
     }
 
@@ -89,7 +89,7 @@ class Settings extends Page
             ->id('form')
             ->livewireSubmitHandler('save')
             ->footer([
-                Actions::make($this->getHeaderActions())
+                Actions::make($this->getHeaderActions()),
             ]);
     }
 
@@ -144,9 +144,9 @@ class Settings extends Page
                                     TextInput::make('title')
                                         ->hiddenLabel()
                                         ->disabled(),
-                                ])
-                        ])
-                ])
+                                ]),
+                        ]),
+                ]),
         ];
     }
 

@@ -4,14 +4,13 @@ namespace App\Policies;
 
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class CategoryPolicy
 {
     /**
      * Perform pre-authorization checks.
      */
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         if ($user->isAdmin()) {
             return true;

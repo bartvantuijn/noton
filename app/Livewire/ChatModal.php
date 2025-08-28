@@ -15,6 +15,7 @@ class ChatModal extends Component implements HasSchemas
     use InteractsWithSchemas;
 
     public ?array $data = [];
+
     public array $messages = [];
 
     public function mount(): void

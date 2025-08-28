@@ -19,7 +19,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedUsers;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -46,7 +46,7 @@ class UserResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            __('Email') => $record->email
+            __('Email') => $record->email,
         ];
     }
 

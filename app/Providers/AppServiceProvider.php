@@ -43,7 +43,7 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         // Force HTTPS scheme
-        if (!app()->environment('local')) {
+        if (! app()->environment('local')) {
             URL::forceScheme('https');
             request()->headers->set('X-Forwarded-Proto', 'https');
         }

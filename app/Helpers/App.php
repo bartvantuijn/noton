@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Category;
 use App\Models\Tag;
 use App\Models\User;
+use Throwable;
 
 class App
 {
@@ -12,7 +13,7 @@ class App
     {
         try {
             return User::exists();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }
@@ -21,7 +22,7 @@ class App
     {
         try {
             return Category::exists();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }
@@ -30,7 +31,7 @@ class App
     {
         try {
             return Tag::exists();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
     }

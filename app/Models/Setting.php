@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Throwable;
 
 class Setting extends Model implements HasMedia
 {
@@ -21,7 +22,7 @@ class Setting extends Model implements HasMedia
     {
         try {
             return static::firstOrCreate(['id' => 1]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new static(['data' => []]);
         }
     }

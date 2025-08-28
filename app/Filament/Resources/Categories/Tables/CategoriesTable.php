@@ -22,7 +22,7 @@ class CategoriesTable
                 TextColumn::make('posts_count')
                     ->label(__('Posts'))
                     ->badge()
-                    ->counts('posts')
+                    ->counts('posts'),
             ])
             ->filters([
                 //

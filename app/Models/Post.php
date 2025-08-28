@@ -16,7 +16,8 @@ use Spatie\Tags\HasTags;
 #[ObservedBy([PostObserver::class])]
 class Post extends Model
 {
-    use HasFactory, HasTags;
+    use HasFactory;
+    use HasTags;
 
     #[Scope]
     protected function mostViewed(Builder $query, int $limit = 1): void

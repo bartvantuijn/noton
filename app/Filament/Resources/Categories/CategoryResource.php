@@ -12,12 +12,9 @@ use App\Filament\Resources\Posts\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use BackedEnum;
-use Filament\Actions\Action;
-use Filament\Infolists;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Schemas;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -28,7 +25,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedFolder;
 
     protected static ?string $recordTitleAttribute = 'name';
 

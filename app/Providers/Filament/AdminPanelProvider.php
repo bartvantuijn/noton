@@ -44,7 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('')
             ->login(Login::class)
             ->registration(Register::class)
-            //->passwordReset()
+            // ->passwordReset()
             ->emailVerification(isRequired: false)
             ->profile(isSimple: false)
             ->font('Exo')
@@ -60,12 +60,12 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
-                //Dashboard::class,
+                // Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                //AccountWidget::class,
-                //FilamentInfoWidget::class,
+                // AccountWidget::class,
+                // FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -80,15 +80,15 @@ class AdminPanelProvider extends PanelProvider
                 RedirectToRegistration::class,
             ])
             ->authMiddleware([
-                //Authenticate::class,
+                // Authenticate::class,
             ])
-            ->navigation(fn(NavigationBuilder $builder): NavigationBuilder => self::getNavigation($builder))
+            ->navigation(fn (NavigationBuilder $builder): NavigationBuilder => self::getNavigation($builder))
             ->userMenuItems([
                 MenuItem::make()
                     ->label(__('Settings'))
                     ->url(fn (): string => Settings::getUrl())
                     ->icon(Heroicon::OutlinedCog)
-                    ->visible(fn () => Settings::canAccess())
+                    ->visible(fn () => Settings::canAccess()),
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->globalSearchFieldKeyBindingSuffix();
@@ -117,13 +117,13 @@ class AdminPanelProvider extends PanelProvider
                                             ->isActiveWhen(fn () => (request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit')) && request()->route('record') == $post->id);
                                     })
                                 )
-                                ->push(
-                                    NavigationItem::make(__('Create post'))
-                                        ->badge('+')
-                                        ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
-                                        ->visible(Gate::allows('create', Category::class))
-                                )
-                                ->toArray()
+                                    ->push(
+                                        NavigationItem::make(__('Create post'))
+                                            ->badge('+')
+                                            ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
+                                            ->visible(Gate::allows('create', Category::class))
+                                    )
+                                    ->toArray()
                             );
                     })->toArray()
             );

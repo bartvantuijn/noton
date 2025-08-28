@@ -25,7 +25,7 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedDocumentText;
 
     protected static ?string $recordTitleAttribute = 'title';
 
@@ -82,7 +82,7 @@ class PostResource extends Resource
                     ->schema([
                         SpatieTagsEntry::make('tags')
                             ->hiddenLabel()
-                            ->visible(fn(Post $post) => $post->tags()->exists()),
+                            ->visible(fn (Post $post) => $post->tags()->exists()),
                         TextEntry::make('content')
                             ->hiddenLabel()
                             ->markdown()
