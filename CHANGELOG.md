@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.0](https://github.com/bartvantuijn/noton/compare/v0.1.8...v0.2.0) (2025-28-08)
+
+* Upgrade to Filament v4
+* Run Pint
+
 ## [0.1.8](https://github.com/bartvantuijn/noton/compare/v0.1.7...v0.1.8) (2025-18-07)
 
 * Add widgets
