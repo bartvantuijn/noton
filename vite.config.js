@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
-import laravel, { refreshPaths } from 'laravel-vite-plugin';
+import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
@@ -10,11 +11,8 @@ export default defineConfig({
                 'resources/js/jquery.js',
                 'resources/js/main.js',
             ],
-            refresh: [
-                ...refreshPaths,
-                'app/Livewire/**',
-                'app/Filament/**',
-            ],
+            refresh: true,
         }),
+        tailwindcss(),
     ],
 });

@@ -1,7 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind variants;
+@import '../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../app';
+@source '../../resources';
 
 /* Hide scrollbar for Webkit (Chrome, Safari) */
 #chat::-webkit-scrollbar {
@@ -22,6 +22,11 @@ pre, code {
 }
 
 /* Phiki styling */
+.phiki {
+    margin: 0;
+    padding: 1rem;
+}
+
 .phiki,
 .phiki span {
     font-size: 12px;

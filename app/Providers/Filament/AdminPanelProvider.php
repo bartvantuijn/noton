@@ -6,10 +6,9 @@ use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Dashboard;
 use App\Filament\Pages\Settings;
-use App\Filament\Resources\CategoryResource;
-use App\Filament\Resources\PostResource;
-use App\Filament\Resources\UserResource;
-use App\Helpers\App;
+use App\Filament\Resources\Categories\CategoryResource;
+use App\Filament\Resources\Posts\PostResource;
+use App\Filament\Resources\Users\UserResource;
 use App\Http\Middleware\RedirectToRegistration;
 use App\Models\Category;
 use App\Models\Post;
@@ -23,11 +22,10 @@ use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -59,15 +57,15 @@ class AdminPanelProvider extends PanelProvider
             ->homeUrl('/')
             ->favicon(fn () => Setting::singleton()->getFirstMediaUrl('favicon') ?: asset('images/favicon.svg'))
             ->sidebarCollapsibleOnDesktop()
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
-                //Pages\Dashboard::class,
+                //Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                //Widgets\AccountWidget::class,
-                //Widgets\FilamentInfoWidget::class,
+                //AccountWidget::class,
+                //FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -89,7 +87,7 @@ class AdminPanelProvider extends PanelProvider
                 MenuItem::make()
                     ->label(__('Settings'))
                     ->url(fn (): string => Settings::getUrl())
-                    ->icon('heroicon-o-cog')
+                    ->icon(Heroicon::OutlinedCog)
                     ->visible(fn () => Settings::canAccess())
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
@@ -110,7 +108,7 @@ class AdminPanelProvider extends PanelProvider
                     ->get()
                     ->map(function ($category) {
                         return NavigationGroup::make($category->name)
-                            ->icon('heroicon-o-folder')
+                            ->icon(Heroicon::OutlinedFolder)
                             ->items(
                                 collect(
                                     $category->posts->map(function ($post) {

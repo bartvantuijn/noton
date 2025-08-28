@@ -10,7 +10,7 @@ class MostUsedTags extends Widget
 {
     protected int | string | array $columnSpan = 'full';
 
-    protected static string $view = 'filament.widgets.most-used-tags';
+    protected string $view = 'filament.widgets.most-used-tags';
 
     public static function canView(): bool
     {

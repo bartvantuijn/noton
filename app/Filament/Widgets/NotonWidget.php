@@ -9,7 +9,7 @@ class NotonWidget extends Widget
 {
     protected int | string | array $columnSpan = 'full';
 
-    protected static string $view = 'filament.widgets.noton-widget';
+    protected string $view = 'filament.widgets.noton-widget';
 
     public function getViewData(): array
     {

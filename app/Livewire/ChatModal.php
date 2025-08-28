@@ -2,17 +2,17 @@
 
 namespace App\Livewire;
 
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Concerns\InteractsWithSchemas;
+use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Inspiring;
 use Livewire\Component;
 
-class ChatModal extends Component implements HasForms
+class ChatModal extends Component implements HasSchemas
 {
-    use InteractsWithForms;
+    use InteractsWithSchemas;
 
     public ?array $data = [];
     public array $messages = [];
@@ -22,11 +22,11 @@ class ChatModal extends Component implements HasForms
         $this->form->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('prompt')
+        return $schema
+            ->components([
+                TextInput::make('prompt')
                     ->hiddenLabel()
                     ->required()
                     ->placeholder(__('Message Noton')),

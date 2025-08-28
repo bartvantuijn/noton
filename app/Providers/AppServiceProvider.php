@@ -71,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register login render hook
         FilamentView::registerRenderHook(
-            PanelsRenderHook::TOPBAR_END,
+            PanelsRenderHook::GLOBAL_SEARCH_AFTER,
             fn (): string => Blade::render('
             @guest
                 <x-filament::button tag="a" href="{{ route(\'filament.admin.auth.login\') }}" color="gray">

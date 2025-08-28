@@ -6,24 +6,40 @@ use App\Helpers\App;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Setting;
-use Filament\Forms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\EmbeddedSchema;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
-class Settings extends Page implements HasForms
+class Settings extends Page
 {
-    use InteractsWithForms;
-
     public Setting $setting;
 
     public ?array $data = [];
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog;
 
-    protected static string $view = 'filament.pages.settings';
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('Save')
+                ->label(__('Save'))
+                ->submit('save')
+                ->action('save')
+                ->formId('form'),
+        ];
+    }
 
     public function getTitle(): string
     {
@@ -47,11 +63,11 @@ class Settings extends Page implements HasForms
         $this->form->fill([
             'appearance' => $this->setting->get('appearance'),
             'categories' => Category::with('posts')->orderBy('sort')->get()
-                ->map(fn ($category) => [
+                ->map(fn($category) => [
                     'id' => $category->id,
                     'name' => $category->name,
                     'posts' => $category->posts()->orderBy('sort')->get()
-                        ->map(fn ($post) => [
+                        ->map(fn($post) => [
                             'id' => $post->id,
                             'title' => $post->title,
                         ]),
@@ -59,64 +75,73 @@ class Settings extends Page implements HasForms
         ]);
     }
 
-    public function form(Form $form): Form
+    public function content(Schema $schema): Schema
     {
-        return $form
+        return $schema
+            ->components([
+                $this->getFormContentComponent(),
+            ]);
+    }
+
+    public function getFormContentComponent(): Component
+    {
+        return Form::make([EmbeddedSchema::make('form')])
+            ->id('form')
+            ->livewireSubmitHandler('save')
+            ->footer([
+                Actions::make($this->getHeaderActions())
+            ]);
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema
             ->model($this->setting)
             ->statePath('data')
-            ->schema($this->getFormSchema());
+            ->components($this->getFormComponents());
     }
 
-    protected function getFormActions(): array
+    protected function getFormComponents(): array
     {
         return [
-            Forms\Components\Actions\Action::make('Save')
-                ->label(__('Save'))
-                ->submit('save'),
-        ];
-    }
-
-    protected function getFormSchema(): array
-    {
-        return [
-            Forms\Components\Section::make(__('Appearance'))
+            Section::make(__('Appearance'))
                 ->collapsible()
                 ->schema([
-                    Forms\Components\ColorPicker::make('appearance.color')
+                    ColorPicker::make('appearance.color')
                         ->label(__('Color'))
                         ->columnSpanFull(),
 
-                    Forms\Components\SpatieMediaLibraryFileUpload::make('appearance.logo')
+                    SpatieMediaLibraryFileUpload::make('appearance.logo')
                         ->label(__('Logo'))
                         ->collection('logo')
                         ->imagePreviewHeight(200)
                         ->downloadable(),
 
-                    Forms\Components\SpatieMediaLibraryFileUpload::make('appearance.favicon')
+                    SpatieMediaLibraryFileUpload::make('appearance.favicon')
                         ->label(__('Favicon'))
                         ->collection('favicon')
                         ->imagePreviewHeight(200)
                         ->downloadable(),
                 ])->columns(3),
 
-            Forms\Components\Section::make(__('Categories'))
+            Section::make(__('Categories'))
                 ->collapsible()
                 ->visible(fn () => App::hasCategories())
                 ->schema([
-                    Forms\Components\Repeater::make('categories')
+                    Repeater::make('categories')
                         ->hiddenLabel()
                         ->addable(false)
                         ->deletable(false)
                         ->schema([
-                            Forms\Components\TextInput::make('name')
+                            TextInput::make('name')
                                 ->hiddenLabel()
                                 ->disabled(),
-                            Forms\Components\Repeater::make('posts')
+                            Repeater::make('posts')
                                 ->label(__('Posts'))
                                 ->addable(false)
                                 ->deletable(false)
                                 ->schema([
-                                    Forms\Components\TextInput::make('title')
+                                    TextInput::make('title')
                                         ->hiddenLabel()
                                         ->disabled(),
                                 ])

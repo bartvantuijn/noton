@@ -9,7 +9,7 @@ class MostViewedPosts extends Widget
 {
     protected int | string | array $columnSpan = 'full';
 
-    protected static string $view = 'filament.widgets.most-viewed-posts';
+    protected string $view = 'filament.widgets.most-viewed-posts';
 
     public function getViewData(): array
     {

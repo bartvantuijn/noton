@@ -31,8 +31,6 @@ RUN npm install && npm cache clean --force
 
 # Compile assets
 COPY vite.config.js ./
-COPY tailwind.config.js ./
-COPY postcss.config.js ./
 COPY resources resources/
 RUN npm run build
 
