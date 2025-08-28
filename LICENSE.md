@@ -6,7 +6,9 @@ FSL-1.1-MIT
 
 ## Notice
 
-Copyright 2025 Bart van Tuijn
+Copyright © 2025 Bart van Tuijn
+
+---
 
 ## Terms and Conditions
 
@@ -16,9 +18,8 @@ The party offering the Software under these Terms and Conditions.
 
 ### The Software
 
-The "Software" is each version of the software that we make available under
-these Terms and Conditions, as indicated by our inclusion of these Terms and
-Conditions with the Software.
+The "Software" is each version of the software that we make available under these Terms and Conditions,
+as indicated by our inclusion of these Terms and Conditions with the Software.
 
 ### License Grant
 
@@ -86,11 +87,3 @@ trademarks, trade names, service marks or product names.
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
