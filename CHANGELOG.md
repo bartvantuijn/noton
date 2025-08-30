@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2](https://github.com/bartvantuijn/noton/compare/v0.2.1...v0.2.2) (2025-30-08)
+
+* Fix asset compiling
+* Fix file upload visibility
+* Add general improvements
+
 ## [0.2.1](https://github.com/bartvantuijn/noton/compare/v0.2.0...v0.2.1) (2025-30-08)
 
 * Add Ollama AI integration

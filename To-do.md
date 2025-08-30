@@ -1,5 +1,6 @@
 # To-do
 
+- Add favicon and manifest.json
 - Add quick links to dashboard
 - Add icon picker to categories and posts
 - Fix reordering of tags
