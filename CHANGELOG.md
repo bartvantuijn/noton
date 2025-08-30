@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.3](https://github.com/bartvantuijn/noton/compare/v0.2.2...v0.2.3) (2025-30-08)
+
+* Remove file upload visibility and change disk
+* Add general improvements
+
 ## [0.2.2](https://github.com/bartvantuijn/noton/compare/v0.2.1...v0.2.2) (2025-30-08)
 
 * Fix asset compiling
