@@ -31,6 +31,7 @@ RUN npm install && npm cache clean --force
 
 # Compile assets
 COPY vite.config.js ./
+COPY app app/
 COPY resources resources/
 RUN npm run build
 
