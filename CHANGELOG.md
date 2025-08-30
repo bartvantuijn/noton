@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.1](https://github.com/bartvantuijn/noton/compare/v0.2.0...v0.2.1) (2025-30-08)
+
+* Add Ollama AI integration
+* Add general improvements
+
 ## [0.2.0](https://github.com/bartvantuijn/noton/compare/v0.1.8...v0.2.0) (2025-28-08)
 
 * Use Phiki for syntax highlighting
