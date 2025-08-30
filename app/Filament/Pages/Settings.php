@@ -114,12 +114,14 @@ class Settings extends Page
                     SpatieMediaLibraryFileUpload::make('appearance.logo')
                         ->label(__('Logo'))
                         ->collection('logo')
+                        ->visibility('public')
                         ->imagePreviewHeight(200)
                         ->downloadable(),
 
                     SpatieMediaLibraryFileUpload::make('appearance.favicon')
                         ->label(__('Favicon'))
                         ->collection('favicon')
+                        ->visibility('public')
                         ->imagePreviewHeight(200)
                         ->downloadable(),
                 ])->columns(3),
