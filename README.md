@@ -12,6 +12,13 @@ A free and open documentation platform built with [Laravel][laravel] and [Filame
 
 See [setup instructions][docker] for how to self-host Noton with Docker.
 
+## Local AI
+
+Noton integrates with [Ollama][ollama] to provide **private**, local AI features.
+All prompts and answers stay on your own server – no external API calls are made.
+
+> Please note that AI models are resource-intensive, you may need to choose a model that fits your host
+
 ---
 
 ### License
@@ -37,3 +44,4 @@ This project is under active development. Contributions are welcome.
 [filament]: https://filamentphp.com
 [license]: LICENSE.md
 [docker]: docs/docker.md
+[ollama]: https://ollama.com/

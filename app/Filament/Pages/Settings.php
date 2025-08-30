@@ -124,7 +124,7 @@ class Settings extends Page
                         ->downloadable(),
                 ])->columns(3),
 
-            Section::make(__('Categories'))
+            Section::make(__('Navigation'))
                 ->collapsible()
                 ->visible(fn () => App::hasCategories())
                 ->schema([

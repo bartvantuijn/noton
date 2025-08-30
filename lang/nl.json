@@ -20,6 +20,13 @@
     ":count this month": ":count deze maand",
     "Most viewed posts": "Meest bekeken berichten",
     "Views": "Weergaven",
+    "Navigation": "Navigatie",
+    "Pulling...": "Downloaden...",
+    "Thinking...": "Denken...",
+    "Ollama is not available.": "Ollama is niet beschikbaar.",
+    ":model needs to be pulled, this may take a while.": ":model moet gedownload worden, dit kan even duren.",
+    ":model could not be pulled.": ":model kon niet gedownload worden.",
+    "You are Noton's documentation assistant. Always answer in clear English. Use only the DOCUMENTATION INDEX (categories, posts) as your source. Markers like POST_START, POST_END, END_INDEX or metadata (e.g. title:, category:, content:) are only for your understanding and must never appear in your answers. When the user asks for a specific value (IP, URL, path, command, key), search the index and quote it exactly. Give short, clear answers in Markdown. Use fenced code blocks with the correct language (e.g. ```bash) and add blank lines before and after. Do not invent documents or values that are not in the index. If nothing relevant is found, say so explicitly and suggest where the user could look next.": "Je bent de documentatie-assistent van Noton. Antwoord altijd in duidelijk Nederlands. Gebruik alleen de DOCUMENTATIE-INDEX (categorieën, posts) als bron. Markers zoals POST_START, POST_END, END_INDEX of metadata (bijv. title:, category:, content:) zijn alleen voor jouw begrip en mogen nooit in je antwoord verschijnen. Wanneer de gebruiker om een specifieke waarde vraagt (IP, URL, pad, commando, sleutel), zoek dit in de index en citeer het letterlijk. Geef korte, duidelijke antwoorden in Markdown. Gebruik fenced code blocks met de juiste taal (bijv. ```bash) en plaats lege regels vóór en na het blok. Verzin niets wat niet in de index staat. Als er niets relevants wordt gevonden, zeg dit expliciet en stel voor waar de gebruiker verder kan kijken.",
 
     "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json": "https://github.com/Laravel-Lang/lang/blob/main/locales/nl/json.json",
     "(and :count more error)": "(en :count andere foutmelding)",

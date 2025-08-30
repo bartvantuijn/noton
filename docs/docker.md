@@ -33,6 +33,10 @@ services:
       DB_DATABASE: noton_database
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: llama3.1:8b
+      OLLAMA_TIMEOUT: 60
+      OLLAMA_PULL_TIMEOUT: 600
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 
@@ -48,6 +52,15 @@ services:
       POSTGRES_PASSWORD: noton_password
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+          
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    networks:
+      - noton
+    volumes:
+      - ./ollama-data:/root/.ollama
 
 networks:
   noton:
@@ -76,8 +89,21 @@ The default `docker-compose.yaml` uses:
 
 - `noton` (Application container)
 - `postgres` (PostgreSQL database)
+- `ollama` (Local AI model server)
 
 You can customize the database credentials or switch to MySQL by editing the `docker-compose.yaml`.
+
+## Local AI
+
+Noton integrates with [Ollama][ollama] to provide **private**, local AI features.
+All prompts and answers stay on your own server – no external API calls are made.
+
+Because AI models are resource-intensive, it’s important to choose a model that matches the resources of your host.
+If the model is too large, Ollama may hang or fail to respond.
+
+You can configure two timeouts for AI requests:
+- `OLLAMA_TIMEOUT`: How long Noton waits for a model response (default: 60s).
+- `OLLAMA_PULL_TIMEOUT`: How long Noton waits when pulling a model (default: 10m).
 
 ## Environment Variables
 
@@ -89,6 +115,7 @@ Key settings such as the application environment, URL, and database credentials 
 - `APP_URL`: The base URL where your app will be hosted (e.g. `https://noton.example.com`).
 - `APP_LOCALE`: The default locale (e.g. `nl`, `en`).
 - `DB_*`: Database connection settings (host, port, user, password, etc.).
+- `OLLAMA_*`: Ollama configuration (url, model, timeouts, etc.).
 
 > Please note that when `APP_ENV` is **not** set to `local`, Noton automatically treats all incoming requests as HTTPS
 
@@ -120,7 +147,7 @@ volumes:
   - ./noton-data/uploads:/srv/www/storage/app/public
 ```
 
-Additionally, make sure to use `./postgres-data` or `./mysql-data` for database data.
+Additionally, make sure to use `./postgres-data` or `./mysql-data` for database data, and `./ollama-data` for AI data.
 
 ## Updating
 
@@ -132,3 +159,5 @@ docker compose up --no-deps -d
 ```
 
 ---
+
+[ollama]: https://ollama.com/

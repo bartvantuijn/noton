@@ -19,6 +19,10 @@ services:
       DB_DATABASE: noton_database
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: llama3.1:8b
+      OLLAMA_TIMEOUT: 60
+      OLLAMA_PULL_TIMEOUT: 600
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 
@@ -34,6 +38,15 @@ services:
       POSTGRES_PASSWORD: noton_password
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    networks:
+      - noton
+    volumes:
+      - ./ollama-data:/root/.ollama
 
 networks:
   noton:
