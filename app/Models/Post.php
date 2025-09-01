@@ -71,7 +71,7 @@ class Post extends Model
         }
 
         if (mb_strlen($this->content) > $length) {
-            $content = $content . '…';
+            $content .= '…';
         }
 
         return new HtmlString($content);

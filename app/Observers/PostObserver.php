@@ -12,7 +12,7 @@ class PostObserver
      */
     public function saved(Post $post): void
     {
-        Tag::all()->each(function (Tag $tag) {
+        Tag::all()->each(function (Tag $tag): void {
             if (! $tag->posts()->exists()) {
                 $tag->delete();
             }

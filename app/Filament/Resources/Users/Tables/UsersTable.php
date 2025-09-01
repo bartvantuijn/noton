@@ -41,7 +41,7 @@ class UsersTable
                     ->iconButton(),
                 DeleteAction::make()
                     ->iconButton()
-                    ->before(function (DeleteAction $action, User $record) {
+                    ->before(function (DeleteAction $action, User $record): void {
                         if ($record->isLastAdmin()) {
                             Notification::make()
                                 ->title(__('There must be at least one admin.'))
