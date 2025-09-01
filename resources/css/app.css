@@ -41,3 +41,17 @@ html.dark .phiki span {
     font-weight: var(--phiki-dark-font-weight) !important;
     text-decoration: var(--phiki-dark-text-decoration) !important;
 }
+
+/* Content styling */
+#content a {
+    text-decoration-color: var(--prose-link-color);
+}
+
+#content hr {
+    margin: 1rem 0;
+}
+
+#content code:before,
+#content code:after {
+    content: "";
+}

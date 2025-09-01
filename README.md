@@ -6,7 +6,7 @@ A free and open documentation platform built with [Laravel][laravel] and [Filame
 
 ---
 
-> Please note that Noton is still under active development
+> Please note that **Noton** is still under active development
 
 ## Installation
 
@@ -42,6 +42,6 @@ This project is under active development. Contributions are welcome.
 
 [laravel]: https://laravel.com
 [filament]: https://filamentphp.com
-[license]: LICENSE.md
 [docker]: docs/docker.md
 [ollama]: https://ollama.com/
+[license]: LICENSE.md

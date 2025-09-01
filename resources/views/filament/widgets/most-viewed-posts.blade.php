@@ -9,7 +9,7 @@
         <x-slot name="heading">{{ __('Most viewed posts') }}</x-slot>
 
         @if(Gate::allows('create', Post::class))
-            <x-slot name="headerEnd">
+            <x-slot name="afterHeader">
                 <x-filament::button :href="PostResource::getUrl('create')" tag="a">
                     {{ __('Create post')  }}
                 </x-filament::button>
@@ -20,7 +20,7 @@
             @foreach ($posts as $post)
                 <x-filament::section>
                     <x-slot name="heading">{{ $post->title }}</x-slot>
-                    <x-slot name="headerEnd">
+                    <x-slot name="afterHeader">
                         <x-filament::badge icon="heroicon-o-eye" color="gray">
                             {{ $post->views }}
                         </x-filament::badge>
