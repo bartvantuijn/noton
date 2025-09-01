@@ -1,3 +1,5 @@
+name: Docker Publish
+
 on:
   push:
     tags: ["v*.*.*"]

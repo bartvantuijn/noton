@@ -1,0 +1,34 @@
+name: Fix Code Style
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
+
+      - name: Run Rector
+        run: composer rector
+
+      - name: Run Pint
+        run: composer pint
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Fix code style
+          commit_user_name: 'GitHub Actions Bot'
+          commit_author: 'Bart van Tuijn <bart@bartvantuijn.nl>'
