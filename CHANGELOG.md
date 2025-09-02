@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/bartvantuijn/noton/compare/v0.2.3...v1.0.0) (2025-02-09)
+
+First stable release of Noton!
+
+* Add content styling and fix section headers
+* Improve schema consistency
+
 ## [0.2.3](https://github.com/bartvantuijn/noton/compare/v0.2.2...v0.2.3) (2025-30-08)
 
 * Remove file upload visibility and change disk

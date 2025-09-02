@@ -1,6 +1,6 @@
-# Self-host Noton with Docker
+# Setup
 
-You can self-host Noton using Docker and Docker Compose. This guide explains how to set up the application with a PostgreSQL or MySQL database.
+You can self-host Noton using [Docker][docker] and Docker Compose or run it locally. This guide explains how to set up the application with a PostgreSQL or MySQL database.
 
 ## Requirements
 
@@ -83,6 +83,100 @@ http://localhost:6686
 
 > This account will automatically be assigned the admin role
 
+### Local development
+
+You can start Noton for local development with or without Docker.
+
+#### Requirements
+
+- PHP 8.2+
+- Composer 2.x
+- Node.js 20+ and npm
+
+#### Optional
+
+- Docker
+- Docker Compose
+
+First, clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/bartvantuijn/noton.git
+cd noton
+composer install --no-scripts
+npm install && npm run build
+```
+
+#### A) With Docker (recommended)
+
+Copy the example compose file and update values to match your setup:
+
+```bash
+cp docker-compose.example.yaml docker-compose.yaml
+```
+
+To develop with the source code mounted inside the container, add a bind-mount to your `docker-compose.yaml`:
+
+```yaml
+# inside the noton service
+volumes:
+    - ./:/srv/www
+```
+
+This mounts the full project root into the container at `/srv/www`.
+
+Start the containers:
+
+```bash
+docker compose up -d
+```
+
+Access the application:
+
+```
+http://localhost:6686
+```
+
+#### B) Without Docker
+
+Copy the example environment file and update values to match your setup:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Start the app:
+
+```bash
+php artisan serve
+```
+
+Access the application:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+If you want seeded demo data, run (inside the container):
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+The seeder will create demo categories, posts and a test user:
+
+- **Email**: test@example.com
+- **Password**: password
+
 ## Configuration
 
 The default `docker-compose.yaml` uses:
@@ -160,4 +254,5 @@ docker compose up --no-deps -d
 
 ---
 
+[docker]: https://www.docker.com/
 [ollama]: https://ollama.com/

@@ -1,8 +1,8 @@
-# Functional Source License, Version 1.1, MIT Future License
+# Functional Source License, Version 1.1
 
 ## Abbreviation
 
-FSL-1.1-MIT
+FSL-1.1
 
 ## Notice
 

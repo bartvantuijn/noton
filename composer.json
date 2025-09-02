@@ -1,10 +1,15 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "bartvantuijn/noton",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
-    "license": "MIT",
+    "description": "A free and open documentation platform built with Laravel and Filament, enhanced by Ollama for local AI features, focused on clarity, structure, and self-hosted simplicity.",
+    "keywords": ["noton", "docker", "laravel", "filament", "ollama"],
+    "license": "FSL-1.1",
+    "authors": [
+        {
+            "name": "Bart van Tuijn",
+            "email": "bart@bartvantuijn.nl"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "filament/filament": "^4.0",
