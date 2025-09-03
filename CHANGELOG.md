@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1](https://github.com/bartvantuijn/noton/compare/v1.0.0...v1.0.1) (2025-03-09)
+
+* Change JSON columns in tags table
+
 ## [1.0.0](https://github.com/bartvantuijn/noton/compare/v0.2.3...v1.0.0) (2025-02-09)
 
 First stable release of Noton!
