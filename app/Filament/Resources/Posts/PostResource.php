@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Phiki\CommonMark\PhikiExtension;
@@ -79,6 +80,7 @@ class PostResource extends Resource
             ->components([
                 Section::make()
                     ->heading(fn (Post $record) => $record->title)
+                    ->afterHeader(fn (Post $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
                         SpatieTagsEntry::make('tags')
                             ->hiddenLabel()

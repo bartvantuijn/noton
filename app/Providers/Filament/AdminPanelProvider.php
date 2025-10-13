@@ -121,7 +121,7 @@ class AdminPanelProvider extends PanelProvider
                                         NavigationItem::make(__('Create post'))
                                             ->badge('+')
                                             ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
-                                            ->visible(Gate::allows('create', Category::class))
+                                            ->visible(Gate::allows('create', Post::class))
                                     )
                                     ->toArray()
                             );

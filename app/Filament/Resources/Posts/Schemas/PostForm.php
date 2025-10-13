@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Enums\Visibility;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Schema;
 
 class PostForm
@@ -31,6 +33,12 @@ class PostForm
                 ->searchable()
                 ->preload()
                 ->createOptionForm(CategoryForm::getFormComponents()),
+            ToggleButtons::make('visibility')
+                ->label(__('Visibility'))
+                ->required()
+                ->default(Visibility::Public)
+                ->options(Visibility::class)
+                ->grouped(),
             SpatieTagsInput::make('tags')
                 ->reorderable()
                 ->columnSpan('full'),

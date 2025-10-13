@@ -23,6 +23,9 @@ class CategoriesTable
                     ->label(__('Posts'))
                     ->badge()
                     ->counts('posts'),
+                TextColumn::make('visibility')
+                    ->label(__('Visibility'))
+                    ->badge(),
             ])
             ->filters([
                 //

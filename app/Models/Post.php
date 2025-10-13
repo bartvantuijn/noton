@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\Visibility;
+use App\Models\Scopes\VisibleScope;
 use App\Observers\PostObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,10 +17,23 @@ use Illuminate\Support\Str;
 use Spatie\Tags\HasTags;
 
 #[ObservedBy([PostObserver::class])]
+#[ScopedBy([VisibleScope::class])]
 class Post extends Model
 {
     use HasFactory;
     use HasTags;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'visibility' => Visibility::class,
+        ];
+    }
 
     #[Scope]
     protected function mostViewed(Builder $query, int $limit = 1): void

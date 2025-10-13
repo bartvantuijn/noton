@@ -1,5 +1,8 @@
 # To-do
 
+- Implement Laravel Lang
+- Fix breadcrumbs
+- Improve CategoryResource.php infolist
 - Add favicon and manifest.json
 - Add quick links to dashboard
 - Add icon picker to categories and posts

@@ -33,6 +33,9 @@ class PostsTable
                     ->badge()
                     ->color('gray')
                     ->icon(Heroicon::OutlinedEye),
+                TextColumn::make('visibility')
+                    ->label(__('Visibility'))
+                    ->badge(),
             ])
             ->filters([
                 SelectFilter::make('tags')

@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 
 class CategoryResource extends Resource
@@ -67,6 +68,7 @@ class CategoryResource extends Resource
             ->components([
                 Section::make()
                     ->heading(fn (Category $record) => $record->name)
+                    ->afterHeader(fn (Category $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
                         RepeatableEntry::make('posts')
                             ->label(__('Posts'))
