@@ -23,6 +23,7 @@ services:
       OLLAMA_MODEL: llama3.1:8b
       OLLAMA_TIMEOUT: 60
       OLLAMA_PULL_TIMEOUT: 600
+      OLLAMA_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 

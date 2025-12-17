@@ -37,6 +37,7 @@ services:
       OLLAMA_MODEL: llama3.1:8b
       OLLAMA_TIMEOUT: 60
       OLLAMA_PULL_TIMEOUT: 600
+      OLLAMA_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 
@@ -209,7 +210,7 @@ Key settings such as the application environment, URL, and database credentials 
 - `APP_URL`: The base URL where your app will be hosted (e.g. `https://noton.example.com`).
 - `APP_LOCALE`: The default locale (e.g. `nl`, `en`).
 - `DB_*`: Database connection settings (host, port, user, password, etc.).
-- `OLLAMA_*`: Ollama configuration (url, model, timeouts, etc.).
+- `OLLAMA_*`: Ollama configuration (url, model, timeouts, authorization, etc.).
 
 > Please note that when `APP_ENV` is **not** set to `local`, Noton automatically treats all incoming requests as HTTPS
 
