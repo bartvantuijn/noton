@@ -6,18 +6,45 @@ use GuzzleHttp\Client;
 
 class OllamaService
 {
+    protected string $baseUrl;
+
+    protected string $model;
+
+    protected int $timeout;
+
+    protected int $pullTimeout;
+
+    protected ?string $bearerToken;
+
+    protected Client $http;
+
     public function __construct()
     {
         $this->baseUrl = config('services.ollama.base_url');
         $this->model = config('services.ollama.model');
         $this->timeout = config('services.ollama.timeout');
         $this->pullTimeout = config('services.ollama.pull_timeout');
+        $this->bearerToken = config('services.ollama.bearer_token');
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
+
+        if (! empty($this->bearerToken)) {
+            $headers['Authorization'] = 'Bearer ' . $this->bearerToken;
+        }
 
         $this->http = new Client([
             'base_uri' => $this->baseUrl,
             'timeout' => $this->timeout,
-            'headers' => ['Accept' => 'application/json', 'Content-Type' => 'application/json'],
+            'headers' => $headers,
         ]);
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
     }
 
     public function isAvailable(): bool
