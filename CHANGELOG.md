@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.3](https://github.com/bartvantuijn/noton/compare/v1.0.2...v1.0.3) (2025-17-12)
+
+* Add optional Bearer token support for Ollama
+* Add general improvements
+
 ## [1.0.2](https://github.com/bartvantuijn/noton/compare/v1.0.1...v1.0.2) (2025-13-10)
 
 * Add visibility to categories and posts
