@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Category;
 use App\Models\Post;
 use App\Services\OllamaService;
 use Filament\Forms\Components\TextInput;
@@ -10,7 +9,7 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class ChatModal extends Component implements HasSchemas
@@ -32,60 +31,73 @@ class ChatModal extends Component implements HasSchemas
     {
         $this->form->fill();
 
-        if (empty($this->messages)) {
-            $this->messages[] = [
-                'key' => 'system',
-                'value' => $this->systemPrompt(),
-            ];
-            $this->messages[] = [
-                'key' => 'system',
-                'value' => $this->documentationIndex(),
-            ];
-        }
+        $this->messages[] = [
+            'key' => 'system',
+            'value' => $this->systemPrompt(),
+        ];
     }
 
     protected function systemPrompt(): string
     {
         return __(
             'You are Noton\'s documentation assistant. Always answer in clear English. ' .
-            'Use only the DOCUMENTATION INDEX (categories, posts) as your source. ' .
-            'Markers like POST_START, POST_END, END_INDEX or metadata (e.g. title:, category:, content:) are only for your understanding and must never appear in your answers. ' .
-            'When the user asks for a specific value (IP, URL, path, command, key), search the index and quote it exactly. ' .
+            'Use only the provided documentation as your source. ' .
+            'Markers like POST_START, POST_END or metadata (e.g. title:, category:, content:) are only for your understanding and must never appear in your answers. ' .
+            'When the user asks for a specific value (IP, URL, path, command, key), search the provided documentation and quote it exactly. ' .
             'Give short, clear answers in Markdown. Use fenced code blocks with the correct language (e.g. ```bash) and add blank lines before and after. ' .
-            'Do not invent documents or values that are not in the index. If nothing relevant is found, say so explicitly and suggest where the user could look next.'
+            'Do not invent documents or values that are not in the provided documentation. If nothing relevant is found, say so explicitly and suggest where the user could look next.'
         );
     }
 
-    protected function documentationIndex(): string
+    protected function relevantPosts(string $query, int $limit = 5): Collection
     {
-        return Cache::remember('documentation_index', now()->addMinutes(5), function () {
-            $categories = Category::query()
-                ->select('name')
-                ->get()
-                ->map(fn ($category) => "- {$category->name}")
-                ->implode("\n");
+        $terms = collect(preg_split('/\s+/', mb_strtolower($query)))
+            ->filter(fn (string $term) => mb_strlen($term) > 2)
+            ->unique()
+            ->values();
 
-            $posts = Post::query()
-                ->select(['title', 'content'])
-                ->with('category')
-                ->get()
-                ->map(function ($post) {
-                    return implode("\n", [
-                        'POST_START',
-                        'title: ' . $post->title,
-                        'category: ' . ($post->category->name ?? 'none'),
-                        'content: ',
-                        $post->content,
-                        'POST_END',
-                    ]);
-                })
-                ->implode("\n");
+        if ($terms->isEmpty()) {
+            return Post::query()->with('category')->limit($limit)->get();
+        }
 
-            return "DOCUMENTATION INDEX\n" .
-                "CATEGORIES:\n{$categories}\n" .
-                "POSTS:\n{$posts}\n" .
-                'END INDEX';
-        });
+        return Post::query()
+            ->select(['id', 'title', 'content'])
+            ->with('category')
+            ->get()
+            ->map(function (Post $post) use ($terms) {
+                $haystack = mb_strtolower($post->title . ' ' . $post->content);
+
+                $score = $terms->reduce(function (int $carry, string $term) use ($haystack) {
+                    return $carry + substr_count($haystack, $term);
+                }, 0);
+
+                return ['post' => $post, 'score' => $score];
+            })
+            ->filter(fn (array $item) => $item['score'] > 0)
+            ->sortByDesc('score')
+            ->take($limit)
+            ->map(fn (array $item) => $item['post'])
+            ->values();
+    }
+
+    protected function buildContext(string $query): string
+    {
+        $posts = $this->relevantPosts($query);
+
+        if ($posts->isEmpty()) {
+            return '';
+        }
+
+        return $posts->map(function (Post $post) {
+            return implode("\n", [
+                'POST_START',
+                'title: ' . $post->title,
+                'category: ' . ($post->category?->name ?? 'none'),
+                'content:',
+                $post->content,
+                'POST_END',
+            ]);
+        })->implode("\n");
     }
 
     public function form(Schema $schema): Schema
@@ -115,6 +127,8 @@ class ChatModal extends Component implements HasSchemas
             'value' => $prompt,
         ];
 
+        $context = $this->buildContext($prompt);
+
         $messages = [];
         foreach ($this->messages as $message) {
             $role = match ($message['key']) {
@@ -127,6 +141,14 @@ class ChatModal extends Component implements HasSchemas
                 'role' => $role,
                 'content' => $message['value'],
             ];
+        }
+
+        // Inject relevant context as system message just before the user's question
+        if ($context !== '') {
+            array_splice($messages, -1, 0, [[
+                'role' => 'system',
+                'content' => "RELEVANT DOCUMENTATION:\n" . $context,
+            ]]);
         }
 
         $reply = $this->ollama->chat($messages);
