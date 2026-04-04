@@ -37,6 +37,7 @@ services:
       OLLAMA_MODEL: llama3.1:8b
       OLLAMA_TIMEOUT: 60
       OLLAMA_PULL_TIMEOUT: 600
+      OLLAMA_KEEP_ALIVE: 1h
       OLLAMA_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
@@ -199,6 +200,7 @@ If the model is too large, Ollama may hang or fail to respond.
 You can configure two timeouts for AI requests:
 - `OLLAMA_TIMEOUT`: How long Noton waits for a model response (default: 60s).
 - `OLLAMA_PULL_TIMEOUT`: How long Noton waits when pulling a model (default: 10m).
+- `OLLAMA_KEEP_ALIVE`: How long Ollama keeps the model loaded (default: 1h).
 
 ## Environment Variables
 

@@ -40,6 +40,7 @@ return [
         'model' => env('OLLAMA_MODEL', 'llama3.1:8b'),
         'timeout' => (int) env('OLLAMA_TIMEOUT', 60),
         'pull_timeout' => (int) env('OLLAMA_PULL_TIMEOUT', 600),
+        'keep_alive' => env('OLLAMA_KEEP_ALIVE', '1h'),
         'bearer_token' => env('OLLAMA_BEARER_TOKEN'),
     ],
 

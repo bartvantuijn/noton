@@ -14,6 +14,8 @@ class OllamaService
 
     protected int $pullTimeout;
 
+    protected string|int $keepAlive;
+
     protected ?string $bearerToken;
 
     protected Client $http;
@@ -24,6 +26,7 @@ class OllamaService
         $this->model = config('services.ollama.model');
         $this->timeout = config('services.ollama.timeout');
         $this->pullTimeout = config('services.ollama.pull_timeout');
+        $this->keepAlive = config('services.ollama.keep_alive');
         $this->bearerToken = config('services.ollama.bearer_token');
 
         $headers = [
@@ -110,7 +113,7 @@ class OllamaService
                     'model' => $this->model,
                     'messages' => $messages,
                     'stream' => false,
-                    'keep_alive' => '1h',
+                    'keep_alive' => $this->keepAlive,
                 ],
             ])->getBody()->getContents(), true);
 
