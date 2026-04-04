@@ -1,5 +1,7 @@
 # To-do
 
+- Improve Ollama context retrieval when needed
+- Improve AI search quality when the documentation grows
 - Implement Laravel Lang
 - Fix breadcrumbs
 - Improve CategoryResource.php infolist

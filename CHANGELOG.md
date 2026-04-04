@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.4](https://github.com/bartvantuijn/noton/compare/v1.0.3...v1.0.4) (2026-04-04)
+
+* Add table delete redirects
+* Refactor ChatModal to use contextual documentation
+* Add baseline feature and unit tests
+* Improve ChatModal prompt flow
+* Make keep alive configurable for Ollama
+* Add floating back button for mobile
+* Improve redirects for unavailable and private pages
+* Add general improvements
+
 ## [1.0.3](https://github.com/bartvantuijn/noton/compare/v1.0.2...v1.0.3) (2025-17-12)
 
 * Add optional Bearer token support for Ollama
