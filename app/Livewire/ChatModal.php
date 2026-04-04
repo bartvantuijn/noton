@@ -10,6 +10,7 @@ use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ChatModal extends Component implements HasSchemas
@@ -30,11 +31,6 @@ class ChatModal extends Component implements HasSchemas
     public function mount(): void
     {
         $this->form->fill();
-
-        $this->messages[] = [
-            'key' => 'system',
-            'value' => $this->systemPrompt(),
-        ];
     }
 
     protected function systemPrompt(): string
@@ -94,7 +90,7 @@ class ChatModal extends Component implements HasSchemas
                 'title: ' . $post->title,
                 'category: ' . ($post->category?->name ?? 'none'),
                 'content:',
-                $post->content,
+                Str::limit((string) $post->content, 2500),
                 'POST_END',
             ]);
         })->implode("\n");
@@ -129,16 +125,18 @@ class ChatModal extends Component implements HasSchemas
 
         $context = $this->buildContext($prompt);
 
-        $messages = [];
-        foreach ($this->messages as $message) {
-            $role = match ($message['key']) {
-                'assistant' => 'assistant',
-                'system' => 'system',
-                default => 'user',
-            };
+        // Filter system messages and cap history to last 10 user/assistant exchanges
+        $history = collect($this->messages)
+            ->reject(fn ($m) => $m['key'] === 'system')
+            ->take(-10);
 
+        $messages = [
+            ['role' => 'system', 'content' => $this->systemPrompt()],
+        ];
+
+        foreach ($history as $message) {
             $messages[] = [
-                'role' => $role,
+                'role' => $message['key'] === 'assistant' ? 'assistant' : 'user',
                 'content' => $message['value'],
             ];
         }

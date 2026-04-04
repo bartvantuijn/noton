@@ -51,7 +51,8 @@ class PostsTable
                 EditAction::make()
                     ->iconButton(),
                 DeleteAction::make()
-                    ->iconButton(),
+                    ->iconButton()
+                    ->successRedirectUrl(fn ($livewire) => url()->current()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
