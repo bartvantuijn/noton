@@ -1,5 +1,12 @@
 # To-do
 
+- Extract Ollama retrieval and prompt-building from `ChatModal` into dedicated services
+- Replace full-post context injection with chunk-based retrieval and section-level context
+- Improve contextual search ranking to avoid loading and scoring all posts in memory on every prompt
+- Add metadata-aware retrieval for AI context (`post`, `category`, heading/section, chunk index)
+- Keep AI retrieval scoped to public/private visibility rules so private content cannot leak into prompts
+- Add baseline automated tests for auth redirects, visibility rules, search results and AI context building
+
 - Improve the system prompt chat modal and context
 - Send text message immediately in chat modal
 - Fix back navigation on mobile
