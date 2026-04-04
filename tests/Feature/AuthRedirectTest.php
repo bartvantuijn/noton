@@ -2,6 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Visibility;
+use App\Filament\Resources\Posts\PostResource;
+use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,5 +34,45 @@ class AuthRedirectTest extends TestCase
 
         $this->get(route('filament.admin.auth.login'))
             ->assertOk();
+    }
+
+    public function test_guests_are_redirected_to_login_from_edit_pages(): void
+    {
+        User::factory()->create();
+
+        $category = Category::factory()->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $post = Post::factory()->for($category)->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->get(PostResource::getUrl('edit', ['record' => $post]))
+            ->assertRedirect(route('filament.admin.auth.login'));
+    }
+
+    public function test_guests_are_redirected_to_login_from_private_posts(): void
+    {
+        User::factory()->create();
+
+        $category = Category::factory()->create([
+            'visibility' => Visibility::Private,
+        ]);
+
+        $post = Post::factory()->for($category)->create([
+            'visibility' => Visibility::Private,
+        ]);
+
+        $this->get(PostResource::getUrl('view', ['record' => $post]))
+            ->assertRedirect(route('filament.admin.auth.login'));
+    }
+
+    public function test_missing_post_pages_redirect_home(): void
+    {
+        User::factory()->create();
+
+        $this->get(PostResource::getUrl('view', ['record' => 999]))
+            ->assertRedirect('/');
     }
 }

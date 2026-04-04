@@ -9,6 +9,7 @@ use App\Filament\Pages\Settings;
 use App\Filament\Resources\Categories\CategoryResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\Users\UserResource;
+use App\Http\Middleware\RedirectToLogin;
 use App\Http\Middleware\RedirectToRegistration;
 use App\Models\Category;
 use App\Models\Post;
@@ -78,6 +79,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 RedirectToRegistration::class,
+                RedirectToLogin::class,
             ])
             ->authMiddleware([
                 // Authenticate::class,

@@ -33,7 +33,7 @@ class VisibilityTest extends TestCase
             ->assertSee('Public post');
     }
 
-    public function test_guests_cannot_view_private_posts(): void
+    public function test_guests_are_redirected_from_private_posts(): void
     {
         User::factory()->create();
 
@@ -46,7 +46,7 @@ class VisibilityTest extends TestCase
         ]);
 
         $this->get(PostResource::getUrl('view', ['record' => $post]))
-            ->assertNotFound();
+            ->assertRedirect(route('filament.admin.auth.login'));
     }
 
     public function test_guests_cannot_view_posts_from_private_categories(): void
@@ -62,10 +62,10 @@ class VisibilityTest extends TestCase
         ]);
 
         $this->get(PostResource::getUrl('view', ['record' => $post]))
-            ->assertNotFound();
+            ->assertRedirect(route('filament.admin.auth.login'));
     }
 
-    public function test_guests_cannot_view_private_categories(): void
+    public function test_guests_are_redirected_from_private_categories(): void
     {
         User::factory()->create();
 
@@ -74,6 +74,6 @@ class VisibilityTest extends TestCase
         ]);
 
         $this->get(CategoryResource::getUrl('view', ['record' => $category]))
-            ->assertNotFound();
+            ->assertRedirect(route('filament.admin.auth.login'));
     }
 }

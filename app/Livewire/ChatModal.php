@@ -81,7 +81,7 @@ class ChatModal extends Component
             return implode("\n", [
                 'POST_START',
                 'title: ' . $post->title,
-                'category: ' . ($post->category?->name ?? 'none'),
+                'category: ' . $post->category->name,
                 'content:',
                 Str::limit((string) $post->content, 2500),
                 'POST_END',
