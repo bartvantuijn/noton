@@ -14,7 +14,7 @@ class OllamaService
 
     protected int $pullTimeout;
 
-    protected string|int $keepAlive;
+    protected string | int $keepAlive;
 
     protected ?string $bearerToken;
 
