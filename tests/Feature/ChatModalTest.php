@@ -53,8 +53,7 @@ class ChatModalTest extends TestCase
         $this->app->instance(OllamaService::class, $ollama);
 
         Livewire::test(ChatModal::class)
-            ->set('data.prompt', 'What is the database host?')
-            ->call('prompt')
+            ->call('prompt', 'What is the database host?')
             ->assertSet('messages.1.key', 'assistant');
 
         $context = collect($messages)
@@ -97,8 +96,7 @@ class ChatModalTest extends TestCase
         $this->app->instance(OllamaService::class, $ollama);
 
         Livewire::test(ChatModal::class)
-            ->set('data.prompt', 'What is the internal API key?')
-            ->call('prompt');
+            ->call('prompt', 'What is the internal API key?');
 
         $this->assertCount(2, $messages);
         $this->assertSame('system', $messages[0]['role']);
@@ -136,8 +134,7 @@ class ChatModalTest extends TestCase
         $this->app->instance(OllamaService::class, $ollama);
 
         Livewire::test(ChatModal::class)
-            ->set('data.prompt', 'Where can I find the billing webhook secret?')
-            ->call('prompt');
+            ->call('prompt', 'Where can I find the billing webhook secret?');
 
         $this->assertCount(2, $messages);
         $this->assertSame('system', $messages[0]['role']);

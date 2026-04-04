@@ -26,11 +26,19 @@ $(document).ready(function () {
     });
 
     // Scroll chat modal
+    let chatScrollTimer = null;
     Livewire.on('scroll-chat-modal', () => {
-        setTimeout(() => {
+        clearTimeout(chatScrollTimer);
+        chatScrollTimer = setTimeout(() => {
             const $el = $('#chat');
-            $el.animate({ scrollTop: $el[0].scrollHeight }, 500);
-        }, 250);
+
+            if (! $el.length) {
+                return;
+            }
+
+            $el.stop(true, true);
+            $el.scrollTop($el[0].scrollHeight);
+        }, 50);
     });
 
     // Copy code snippets

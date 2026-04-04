@@ -4,33 +4,20 @@ namespace App\Livewire;
 
 use App\Models\Post;
 use App\Services\OllamaService;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Concerns\InteractsWithSchemas;
-use Filament\Schemas\Contracts\HasSchemas;
-use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
-class ChatModal extends Component implements HasSchemas
+class ChatModal extends Component
 {
-    use InteractsWithSchemas;
-
     protected OllamaService $ollama;
-
-    public ?array $data = [];
 
     public array $messages = [];
 
     public function boot(OllamaService $ollama): void
     {
         $this->ollama = $ollama;
-    }
-
-    public function mount(): void
-    {
-        $this->form->fill();
     }
 
     protected function systemPrompt(): string
@@ -102,23 +89,9 @@ class ChatModal extends Component implements HasSchemas
         })->implode("\n");
     }
 
-    public function form(Schema $schema): Schema
+    public function prompt(string $prompt): void
     {
-        return $schema
-            ->components([
-                TextInput::make('prompt')
-                    ->hiddenLabel()
-                    ->required()
-                    ->placeholder(__('Message Noton')),
-            ])
-            ->statePath('data')
-            ->extraAttributes(['class' => 'w-full']);
-    }
-
-    public function prompt(): void
-    {
-        $state = $this->form->getState();
-        $prompt = trim((string) ($state['prompt'] ?? ''));
+        $prompt = trim($prompt);
 
         if ($prompt === '') {
             return;
@@ -164,7 +137,6 @@ class ChatModal extends Component implements HasSchemas
             'value' => $reply,
         ];
 
-        $this->form->fill();
         $this->dispatch('scroll-chat-modal');
     }
 
