@@ -32,29 +32,17 @@
         <x-slot name="description">{{ __('Chat with Noton') }}</x-slot>
 
         <div id="chat" class="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
-            @if (! $this->ollama->isAvailable())
-                <div class="flex items-center gap-4 text-xs text-gray-500">
-                    <x-filament::icon icon="heroicon-o-language" class="h-4 w-4" />
-                    <span>{{ __('Ollama is not available.') }}</span>
-                </div>
-            @elseif(! $this->ollama->hasModel())
-                <div class="flex items-center gap-4 text-xs text-gray-500">
-                    <x-filament::icon icon="heroicon-o-language" class="h-4 w-4" />
-                    <span>{{ __(':model needs to be pulled, this may take a while.', ['model' => $this->ollama->getModel()]) }}</span>
-                </div>
-            @else
-                <div class="flex items-center gap-4 text-xs text-gray-500">
-                    <x-filament::icon icon="heroicon-o-language" class="h-4 w-4" />
-                    <span>{{ $this->ollama->getModel() }}</span>
-                </div>
-            @endif
+            <div class="flex items-center gap-4 text-xs text-gray-500">
+                <x-filament::icon icon="heroicon-o-language" class="h-4 w-4" />
+                <span>{{ $provider }} · {{ $status }}</span>
+            </div>
 
             @foreach ($messages as $message)
                 @if ($message['key'] === 'system')
                     @continue
                 @endif
 
-                <div class="@if($message['key'] === 'user') bg-primary-500 self-end @else bg-gray-100 dark:bg-gray-800 self-start @endif p-2 rounded-lg">
+                <div wire:key="message-{{ $message['id'] }}" class="@if($message['key'] === 'user') bg-primary-500 self-end @else bg-gray-100 dark:bg-gray-800 self-start @endif p-2 rounded-lg">
                     {!!
                         Str::markdown($message['value'], extensions: [new PhikiExtension([
                             'light' => 'github-light-default',
@@ -70,11 +58,7 @@
 
             <div wire:loading.flex wire:target="prompt" class="items-center gap-4 text-xs text-gray-500">
                 <x-filament::loading-indicator class="h-4 w-4" />
-                @if(! $this->ollama->hasModel())
-                    <span>{{ __('Pulling...') }}</span>
-                @else
-                    <span>{{ __('Thinking...') }}</span>
-                @endif
+                <span>{{ $loading }}</span>
             </div>
         </div>
 

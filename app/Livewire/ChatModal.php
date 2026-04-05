@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Post;
+use App\Models\Setting;
 use App\Services\OllamaService;
+use App\Services\OpenClawService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -13,11 +15,24 @@ class ChatModal extends Component
 {
     protected OllamaService $ollama;
 
+    protected OpenClawService $openclaw;
+
     public array $messages = [];
 
-    public function boot(OllamaService $ollama): void
+    public function boot(OllamaService $ollama, OpenClawService $openclaw): void
     {
         $this->ollama = $ollama;
+        $this->openclaw = $openclaw;
+    }
+
+    protected function provider(): string
+    {
+        return Setting::singleton()->get('ai.provider', config('services.ai.provider', 'ollama'));
+    }
+
+    protected function service(): OllamaService | OpenClawService
+    {
+        return $this->provider() === 'openclaw' ? $this->openclaw : $this->ollama;
     }
 
     protected function systemPrompt(): string
@@ -98,6 +113,7 @@ class ChatModal extends Component
         }
 
         $this->messages[] = [
+            'id' => (string) Str::uuid(),
             'key' => 'user',
             'value' => $prompt,
         ];
@@ -130,9 +146,10 @@ class ChatModal extends Component
             ]]);
         }
 
-        $reply = $this->ollama->chat($messages);
+        $reply = $this->service()->chat($messages);
 
         $this->messages[] = [
+            'id' => (string) Str::uuid(),
             'key' => 'assistant',
             'value' => $reply,
         ];
@@ -142,6 +159,23 @@ class ChatModal extends Component
 
     public function render(): View
     {
-        return view('livewire.chat-modal');
+        $provider = $this->provider();
+        $service = $this->service();
+
+        if (! $service->isAvailable()) {
+            $status = $provider === 'openclaw' ? __('OpenClaw is not available.') : __('Ollama is not available.');
+        } elseif (! $service->hasModel()) {
+            $status = $provider === 'openclaw' ? __(':model is not available.', ['model' => $service->getModel()]) : __(':model needs to be pulled, this may take a while.', ['model' => $service->getModel()]);
+        } else {
+            $status = $service->getModel();
+        }
+
+        $loading = $provider === 'ollama' && ! $this->ollama->hasModel() ? __('Pulling...') : __('Thinking...');
+
+        return view('livewire.chat-modal', [
+            'provider' => $provider === 'openclaw' ? __('OpenClaw') : __('Ollama'),
+            'status' => $status,
+            'loading' => $loading,
+        ]);
     }
 }

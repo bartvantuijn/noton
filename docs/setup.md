@@ -33,12 +33,17 @@ services:
       DB_DATABASE: noton_database
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
+      AI_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_MODEL: llama3.1:8b
       OLLAMA_TIMEOUT: 60
       OLLAMA_PULL_TIMEOUT: 600
       OLLAMA_KEEP_ALIVE: 1h
       OLLAMA_BEARER_TOKEN: ""
+      OPENCLAW_BASE_URL: ""
+      OPENCLAW_MODEL: openclaw/default
+      OPENCLAW_TIMEOUT: 60
+      OPENCLAW_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 
@@ -185,22 +190,49 @@ The default `docker-compose.yaml` uses:
 
 - `noton` (Application container)
 - `postgres` (PostgreSQL database)
-- `ollama` (Local AI model server)
+- `ollama` (Default local AI provider)
 
 You can customize the database credentials or switch to MySQL by editing the `docker-compose.yaml`.
+If you want to use OpenClaw instead, point `OPENCLAW_BASE_URL` to your OpenClaw Gateway and set `AI_PROVIDER=openclaw`.
 
 ## Local AI
 
-Noton integrates with [Ollama][ollama] to provide **private**, local AI features.
+Noton integrates with [Ollama][ollama] and [OpenClaw][openclaw] to provide **private** AI features.
+You can choose the active provider with `AI_PROVIDER`.
 All prompts and answers stay on your own server – no external API calls are made.
 
 Because AI models are resource-intensive, it’s important to choose a model that matches the resources of your host.
 If the model is too large, Ollama may hang or fail to respond.
 
-You can configure two timeouts for AI requests:
+You can configure the active provider in `.env` or later in the Noton settings page.
+
+### Ollama
+
+Ollama is the default local AI provider.
+
+- `OLLAMA_BASE_URL`: Base URL of your Ollama instance.
+- `OLLAMA_MODEL`: Model name used by Noton.
 - `OLLAMA_TIMEOUT`: How long Noton waits for a model response (default: 60s).
 - `OLLAMA_PULL_TIMEOUT`: How long Noton waits when pulling a model (default: 10m).
 - `OLLAMA_KEEP_ALIVE`: How long Ollama keeps the model loaded (default: 1h).
+- `OLLAMA_BEARER_TOKEN`: Optional bearer token for Ollama.
+
+### OpenClaw
+
+OpenClaw uses its OpenAI-compatible HTTP API.
+Set `OPENCLAW_BASE_URL` to your OpenClaw Gateway URL.
+Use a base URL that already includes `/v1`, for example:
+
+```text
+http://127.0.0.1:18789/v1
+```
+
+Use `openclaw/default` as the model unless you want to target a different OpenClaw agent.
+
+- `OPENCLAW_BASE_URL`: Base URL of your OpenClaw Gateway including `/v1`.
+- `OPENCLAW_MODEL`: OpenClaw model or agent target, usually `openclaw/default`.
+- `OPENCLAW_TIMEOUT`: How long Noton waits for a response (default: 60s).
+- `OPENCLAW_BEARER_TOKEN`: Bearer token for your OpenClaw Gateway.
 
 ## Environment Variables
 
@@ -212,7 +244,9 @@ Key settings such as the application environment, URL, and database credentials 
 - `APP_URL`: The base URL where your app will be hosted (e.g. `https://noton.example.com`).
 - `APP_LOCALE`: The default locale (e.g. `nl`, `en`).
 - `DB_*`: Database connection settings (host, port, user, password, etc.).
-- `OLLAMA_*`: Ollama configuration (url, model, timeouts, authorization, etc.).
+- `AI_PROVIDER`: Active chat provider (`ollama` or `openclaw`).
+- `OLLAMA_*`: Ollama configuration (url, model, timeouts, keep alive, authorization, etc.).
+- `OPENCLAW_*`: OpenClaw configuration (base url, model, timeout, bearer token, etc.).
 
 > Please note that when `APP_ENV` is **not** set to `local`, Noton automatically treats all incoming requests as HTTPS
 
@@ -259,3 +293,4 @@ docker compose up --no-deps -d
 
 [docker]: https://www.docker.com/
 [ollama]: https://ollama.com/
+[openclaw]: https://openclaw.ai/

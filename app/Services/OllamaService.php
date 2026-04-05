@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
 
 class OllamaService
 {
@@ -22,12 +24,14 @@ class OllamaService
 
     public function __construct()
     {
-        $this->baseUrl = config('services.ollama.base_url');
-        $this->model = config('services.ollama.model');
-        $this->timeout = config('services.ollama.timeout');
-        $this->pullTimeout = config('services.ollama.pull_timeout');
-        $this->keepAlive = config('services.ollama.keep_alive');
-        $this->bearerToken = config('services.ollama.bearer_token');
+        $settings = $this->settings();
+
+        $this->baseUrl = $settings['base_url'];
+        $this->model = $settings['model'];
+        $this->timeout = $settings['timeout'];
+        $this->pullTimeout = $settings['pull_timeout'];
+        $this->keepAlive = $settings['keep_alive'];
+        $this->bearerToken = $settings['bearer_token'];
 
         $headers = [
             'Accept' => 'application/json',
@@ -43,6 +47,20 @@ class OllamaService
             'timeout' => $this->timeout,
             'headers' => $headers,
         ]);
+    }
+
+    protected function settings(): array
+    {
+        $settings = Setting::singleton()->get('ai.ollama', []);
+
+        return [
+            'base_url' => (string) Arr::get($settings, 'base_url', config('services.ollama.base_url')),
+            'model' => (string) Arr::get($settings, 'model', config('services.ollama.model')),
+            'timeout' => (int) Arr::get($settings, 'timeout', config('services.ollama.timeout')),
+            'pull_timeout' => (int) Arr::get($settings, 'pull_timeout', config('services.ollama.pull_timeout')),
+            'keep_alive' => Arr::get($settings, 'keep_alive', config('services.ollama.keep_alive')),
+            'bearer_token' => Arr::get($settings, 'bearer_token', config('services.ollama.bearer_token')),
+        ];
     }
 
     public function isAvailable(): bool
