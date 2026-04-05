@@ -56,6 +56,7 @@ class ChatModalTest extends TestCase
 
         Livewire::test(ChatModal::class)
             ->call('prompt', 'What is the database host?')
+            ->assertSet('messages.0.key', 'user')
             ->assertSet('messages.1.key', 'assistant');
 
         $context = collect($messages)
@@ -182,6 +183,7 @@ class ChatModalTest extends TestCase
 
         Livewire::test(ChatModal::class)
             ->call('prompt', 'What is the database host?')
+            ->assertSet('messages.0.key', 'user')
             ->assertSet('messages.1.key', 'assistant')
             ->assertSet('messages.1.value', 'Use `postgres` as the database host.');
     }

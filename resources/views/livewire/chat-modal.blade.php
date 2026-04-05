@@ -42,7 +42,7 @@
                     @continue
                 @endif
 
-                <div class="@if($message['key'] === 'user') bg-primary-500 self-end @else bg-gray-100 dark:bg-gray-800 self-start @endif p-2 rounded-lg">
+                <div wire:key="message-{{ $message['id'] }}" class="@if($message['key'] === 'user') bg-primary-500 self-end @else bg-gray-100 dark:bg-gray-800 self-start @endif p-2 rounded-lg">
                     {!!
                         Str::markdown($message['value'], extensions: [new PhikiExtension([
                             'light' => 'github-light-default',

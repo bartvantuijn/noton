@@ -113,6 +113,7 @@ class ChatModal extends Component
         }
 
         $this->messages[] = [
+            'id' => (string) Str::uuid(),
             'key' => 'user',
             'value' => $prompt,
         ];
@@ -148,6 +149,7 @@ class ChatModal extends Component
         $reply = $this->service()->chat($messages);
 
         $this->messages[] = [
+            'id' => (string) Str::uuid(),
             'key' => 'assistant',
             'value' => $reply,
         ];
