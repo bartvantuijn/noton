@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.5](https://github.com/bartvantuijn/noton/compare/v1.0.4...v1.0.5) (2026-05-04)
+
+* Require tests before Docker release publish
+* Add OpenClaw chat provider integration (#9)
+* Add general improvements
+
 ## [1.0.4](https://github.com/bartvantuijn/noton/compare/v1.0.3...v1.0.4) (2026-04-04)
 
 * Add table delete redirects
@@ -13,7 +19,7 @@
 
 ## [1.0.3](https://github.com/bartvantuijn/noton/compare/v1.0.2...v1.0.3) (2025-17-12)
 
-* Add optional Bearer token support for Ollama
+* Add optional Bearer token support for Ollama (#5)
 * Add general improvements
 
 ## [1.0.2](https://github.com/bartvantuijn/noton/compare/v1.0.1...v1.0.2) (2025-13-10)
