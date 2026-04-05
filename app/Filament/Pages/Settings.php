@@ -10,6 +10,7 @@ use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -61,6 +62,23 @@ class Settings extends Page
         $this->setting = Setting::singleton();
 
         $this->form->fill([
+            'ai' => [
+                'provider' => $this->setting->get('ai.provider', config('services.ai.provider', 'ollama')),
+                'ollama' => [
+                    'base_url' => $this->setting->get('ai.ollama.base_url', config('services.ollama.base_url')),
+                    'model' => $this->setting->get('ai.ollama.model', config('services.ollama.model')),
+                    'timeout' => $this->setting->get('ai.ollama.timeout', config('services.ollama.timeout')),
+                    'pull_timeout' => $this->setting->get('ai.ollama.pull_timeout', config('services.ollama.pull_timeout')),
+                    'keep_alive' => $this->setting->get('ai.ollama.keep_alive', config('services.ollama.keep_alive')),
+                    'bearer_token' => $this->setting->get('ai.ollama.bearer_token', config('services.ollama.bearer_token')),
+                ],
+                'openclaw' => [
+                    'base_url' => $this->setting->get('ai.openclaw.base_url', config('services.openclaw.base_url')),
+                    'model' => $this->setting->get('ai.openclaw.model', config('services.openclaw.model')),
+                    'timeout' => $this->setting->get('ai.openclaw.timeout', config('services.openclaw.timeout')),
+                    'bearer_token' => $this->setting->get('ai.openclaw.bearer_token', config('services.openclaw.bearer_token')),
+                ],
+            ],
             'appearance' => $this->setting->get('appearance'),
             'categories' => Category::with('posts')->orderBy('sort')->get()
                 ->map(fn ($category) => [
@@ -104,6 +122,60 @@ class Settings extends Page
     protected function getFormComponents(): array
     {
         return [
+            Section::make(__('AI'))
+                ->collapsible()
+                ->schema([
+                    Select::make('ai.provider')
+                        ->label(__('Provider'))
+                        ->options([
+                            'ollama' => __('Ollama'),
+                            'openclaw' => __('OpenClaw'),
+                        ])
+                        ->required()
+                        ->native(false)
+                        ->columnSpanFull(),
+
+                    Section::make(__('Ollama'))
+                        ->collapsible()
+                        ->schema([
+                            TextInput::make('ai.ollama.base_url')
+                                ->label(__('Base URL')),
+                            TextInput::make('ai.ollama.model')
+                                ->label(__('Model')),
+                            TextInput::make('ai.ollama.timeout')
+                                ->label(__('Timeout'))
+                                ->numeric()
+                                ->minValue(1),
+                            TextInput::make('ai.ollama.pull_timeout')
+                                ->label(__('Pull timeout'))
+                                ->numeric()
+                                ->minValue(1),
+                            TextInput::make('ai.ollama.keep_alive')
+                                ->label(__('Keep alive')),
+                            TextInput::make('ai.ollama.bearer_token')
+                                ->label(__('Bearer token'))
+                                ->password()
+                                ->revealable(),
+                        ])->columns(2),
+
+                    Section::make(__('OpenClaw'))
+                        ->collapsible()
+                        ->schema([
+                            TextInput::make('ai.openclaw.base_url')
+                                ->label(__('Base URL')),
+                            TextInput::make('ai.openclaw.model')
+                                ->label(__('Model')),
+                            TextInput::make('ai.openclaw.timeout')
+                                ->label(__('Timeout'))
+                                ->numeric()
+                                ->minValue(1),
+                            TextInput::make('ai.openclaw.bearer_token')
+                                ->label(__('Bearer token'))
+                                ->password()
+                                ->revealable(),
+                        ])->columns(2),
+                ])->columns(1),
+
             Section::make(__('Appearance'))
                 ->collapsible()
                 ->schema([
@@ -156,9 +228,11 @@ class Settings extends Page
 
         $state = $this->form->getState();
 
+        $ai = $state['ai'] ?? [];
         $appearance = $state['appearance'] ?? [];
         $categories = $state['categories'] ?? [];
 
+        $this->setting->set('ai', $ai);
         $this->setting->set('appearance', $appearance);
 
         foreach ($categories as $categoryIndex => $categoryData) {

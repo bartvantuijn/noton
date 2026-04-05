@@ -19,12 +19,17 @@ services:
       DB_DATABASE: noton_database
       DB_USERNAME: noton_user
       DB_PASSWORD: noton_password
+      AI_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_MODEL: llama3.1:8b
       OLLAMA_TIMEOUT: 60
       OLLAMA_PULL_TIMEOUT: 600
       OLLAMA_KEEP_ALIVE: 1h
       OLLAMA_BEARER_TOKEN: ""
+      OPENCLAW_BASE_URL: ""
+      OPENCLAW_MODEL: openclaw/default
+      OPENCLAW_TIMEOUT: 60
+      OPENCLAW_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
 

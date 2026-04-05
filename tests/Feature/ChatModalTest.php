@@ -6,7 +6,9 @@ use App\Enums\Visibility;
 use App\Livewire\ChatModal;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Setting;
 use App\Services\OllamaService;
+use App\Services\OpenClawService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Mockery;
@@ -139,5 +141,48 @@ class ChatModalTest extends TestCase
         $this->assertCount(2, $messages);
         $this->assertSame('system', $messages[0]['role']);
         $this->assertSame('user', $messages[1]['role']);
+    }
+
+    public function test_it_uses_openclaw_when_selected_in_settings(): void
+    {
+        $category = Category::factory()->create([
+            'name' => 'Infrastructure',
+            'visibility' => Visibility::Public,
+        ]);
+
+        Post::factory()->for($category)->create([
+            'title' => 'Database connection',
+            'content' => 'Set DB_HOST to postgres and DB_PORT to 5432.',
+            'visibility' => Visibility::Public,
+        ]);
+
+        Setting::singleton()->set('ai.provider', 'openclaw');
+
+        $openclaw = Mockery::mock(OpenClawService::class);
+        $openclaw->shouldReceive('isAvailable')->andReturn(true);
+        $openclaw->shouldReceive('hasModel')->andReturn(true);
+        $openclaw->shouldReceive('getModel')->andReturn('openclaw/default');
+        $openclaw->shouldReceive('chat')
+            ->once()
+            ->withArgs(function (array $payload): bool {
+                $context = collect($payload)
+                    ->pluck('content')
+                    ->first(fn (string $content) => str_starts_with($content, 'RELEVANT DOCUMENTATION:')) ?? '';
+
+                return str_contains($context, 'Database connection')
+                    && str_contains($context, 'DB_HOST to postgres');
+            })
+            ->andReturn('Use `postgres` as the database host.');
+
+        $this->app->instance(OpenClawService::class, $openclaw);
+
+        $ollama = Mockery::mock(OllamaService::class);
+        $ollama->shouldNotReceive('chat');
+        $this->app->instance(OllamaService::class, $ollama);
+
+        Livewire::test(ChatModal::class)
+            ->call('prompt', 'What is the database host?')
+            ->assertSet('messages.1.key', 'assistant')
+            ->assertSet('messages.1.value', 'Use `postgres` as the database host.');
     }
 }
