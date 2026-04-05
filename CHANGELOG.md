@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.6](https://github.com/bartvantuijn/noton/compare/v1.0.5...v1.0.6) (2026-05-04)
+
+* Fix system prompt translation
+* Collapse settings sections by default
+* Add general improvements
+
 ## [1.0.5](https://github.com/bartvantuijn/noton/compare/v1.0.4...v1.0.5) (2026-05-04)
 
 * Require tests before Docker release publish
