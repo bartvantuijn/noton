@@ -22,7 +22,7 @@ class OpenClawService
     {
         $settings = $this->settings();
 
-        $this->baseUrl = $settings['base_url'];
+        $this->baseUrl = rtrim($settings['base_url'], '/') . '/';
         $this->model = $settings['model'];
         $this->timeout = $settings['timeout'];
         $this->bearerToken = $settings['bearer_token'];
@@ -58,7 +58,7 @@ class OpenClawService
     public function isAvailable(): bool
     {
         try {
-            return $this->http->get('/models')->getStatusCode() === 200;
+            return $this->http->get('models')->getStatusCode() === 200;
         } catch (\Throwable $e) {
             return false;
         }
@@ -74,7 +74,7 @@ class OpenClawService
         $model ??= $this->model;
 
         try {
-            $response = json_decode($this->http->get('/models')->getBody()->getContents(), true);
+            $response = json_decode($this->http->get('models')->getBody()->getContents(), true);
 
             foreach ($response['data'] ?? [] as $item) {
                 if (($item['id'] ?? null) === $model) {
@@ -99,7 +99,7 @@ class OpenClawService
         }
 
         try {
-            $response = json_decode($this->http->post('/chat/completions', [
+            $response = json_decode($this->http->post('chat/completions', [
                 'json' => [
                     'model' => $this->model,
                     'messages' => $messages,
