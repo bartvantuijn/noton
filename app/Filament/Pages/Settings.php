@@ -137,6 +137,7 @@ class Settings extends Page
 
                     Section::make(__('Ollama'))
                         ->collapsible()
+                        ->collapsed()
                         ->schema([
                             TextInput::make('ai.ollama.base_url')
                                 ->label(__('Base URL')),
@@ -160,6 +161,7 @@ class Settings extends Page
 
                     Section::make(__('OpenClaw'))
                         ->collapsible()
+                        ->collapsed()
                         ->schema([
                             TextInput::make('ai.openclaw.base_url')
                                 ->label(__('Base URL')),
