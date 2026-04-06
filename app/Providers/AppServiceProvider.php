@@ -81,24 +81,10 @@ class AppServiceProvider extends ServiceProvider
             '),
         );
 
-        // Register mobile back button
+        // Register quick actions render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,
-            fn (): string => Blade::render('
-            @unless (request()->routeIs([
-                \'filament.admin.pages.dashboard\',
-                \'filament.admin.auth.login\',
-                \'filament.admin.auth.register\',
-            ]))
-                <x-filament::button
-                    size="lg"
-                    color="gray"
-                    icon="heroicon-o-arrow-left"
-                    class="fixed right-5 bottom-5 z-50 rounded-full shadow-lg md:hidden"
-                    onclick="window.history.length > 1 ? history.back() : window.location.href = \'{{ url(\'/\') }}\'"
-                />
-            @endunless
-            '),
+            fn (): string => Blade::render(view('filament.components.quick-actions')->render()),
         );
 
         // Register login render hook

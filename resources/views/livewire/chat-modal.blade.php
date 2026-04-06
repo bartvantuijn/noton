@@ -22,10 +22,11 @@
             this.pendingPrompt = '';
         },
     }"
+    x-on:open-chat-modal.window="$refs.trigger?.click()"
 >
     <x-filament::modal slide-over>
         <x-slot name="trigger">
-            <x-filament::icon-button icon="heroicon-o-cpu-chip"></x-filament::icon-button>
+            <x-filament::icon-button x-ref="trigger" icon="heroicon-o-cpu-chip" class="hidden md:flex"></x-filament::icon-button>
         </x-slot>
 
         <x-slot name="heading">{{ __('Chat') }}</x-slot>
