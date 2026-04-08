@@ -32,10 +32,14 @@ class ViewPost extends ViewRecord
         ];
 
         if ($category = $this->record->category) {
+            foreach ($category->getAncestors() as $ancestor) {
+                $breadcrumbs[CategoryResource::getUrl('view', ['record' => $ancestor])] = $ancestor->name;
+            }
+
             $breadcrumbs[CategoryResource::getUrl('view', ['record' => $category])] = $category->name;
         }
 
-        $breadcrumbs += parent::getBreadcrumbs();
+        $breadcrumbs[] = $this->getBreadcrumb();
 
         return $breadcrumbs;
     }

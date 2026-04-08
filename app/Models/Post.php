@@ -46,6 +46,11 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function isEffectivelyPrivate(): bool
+    {
+        return $this->visibility === Visibility::Private || $this->category->isEffectivelyPrivate();
+    }
+
     public function summary(int $length = 150, ?string $highlight = null): HtmlString
     {
         // Parse record content

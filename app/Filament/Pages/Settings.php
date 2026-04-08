@@ -22,6 +22,9 @@ use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class Settings extends Page
 {
@@ -80,16 +83,7 @@ class Settings extends Page
                 ],
             ],
             'appearance' => $this->setting->get('appearance'),
-            'categories' => Category::with('posts')->orderBy('sort')->get()
-                ->map(fn ($category) => [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'posts' => $category->posts()->orderBy('sort')->get()
-                        ->map(fn ($post) => [
-                            'id' => $post->id,
-                            'title' => $post->title,
-                        ]),
-                ]),
+            'categories' => $this->getNavigationCategoryData(),
         ]);
     }
 
@@ -206,20 +200,7 @@ class Settings extends Page
                         ->hiddenLabel()
                         ->addable(false)
                         ->deletable(false)
-                        ->schema([
-                            TextInput::make('name')
-                                ->hiddenLabel()
-                                ->disabled(),
-                            Repeater::make('posts')
-                                ->label(__('Posts'))
-                                ->addable(false)
-                                ->deletable(false)
-                                ->schema([
-                                    TextInput::make('title')
-                                        ->hiddenLabel()
-                                        ->disabled(),
-                                ]),
-                        ]),
+                        ->schema($this->getCategoryNavigationSchema()),
                 ]),
         ];
     }
@@ -228,38 +209,113 @@ class Settings extends Page
     {
         $this->setting = Setting::singleton();
 
-        $state = $this->form->getState();
+        try {
+            DB::transaction(function (): void {
+                $state = $this->form->getState();
 
-        $ai = $state['ai'] ?? [];
-        $appearance = $state['appearance'] ?? [];
-        $categories = $state['categories'] ?? [];
+                $ai = $state['ai'] ?? [];
+                $appearance = $state['appearance'] ?? [];
+                $categories = $state['categories'] ?? [];
 
-        $this->setting->set('ai', $ai);
-        $this->setting->set('appearance', $appearance);
+                $this->setting->set('ai', $ai);
+                $this->setting->set('appearance', $appearance);
 
+                $this->saveNavigationCategoryOrder($categories);
+            });
+
+            Notification::make()
+                ->title(__('Settings saved successfully.'))
+                ->success()
+                ->send();
+
+            redirect(request()?->header('Referer'));
+        } catch (ValidationException $exception) {
+            Notification::make()
+                ->title(collect($exception->errors())->flatten()->first())
+                ->danger()
+                ->send();
+        }
+    }
+
+    protected function getNavigationCategoryData(): array
+    {
+        $categories = Category::with([
+            'posts' => fn ($query) => $query->orderBy('sort'),
+            'children' => fn ($query) => $query->orderBy('sort'),
+        ])
+            ->whereNull('parent_id')
+            ->orderBy('sort')
+            ->get();
+
+        return $this->mapNavigationCategories($categories);
+    }
+
+    protected function getCategoryNavigationSchema(): array
+    {
+        return [
+            TextInput::make('name')
+                ->hiddenLabel()
+                ->disabled(),
+            Repeater::make('children')
+                ->label(__('Subcategories'))
+                ->visible(fn (?array $state): bool => filled($state))
+                ->addable(false)
+                ->deletable(false)
+                ->schema(fn () => $this->getCategoryNavigationSchema()),
+            Repeater::make('posts')
+                ->label(__('Posts'))
+                ->addable(false)
+                ->deletable(false)
+                ->schema([
+                    TextInput::make('title')
+                        ->hiddenLabel()
+                        ->disabled(),
+                ]),
+        ];
+    }
+
+    protected function mapNavigationCategories(Collection $categories): array
+    {
+        return $categories
+            ->map(fn (Category $category) => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'children' => $this->mapNavigationCategories($category->children),
+                'posts' => $category->posts
+                    ->map(fn (Post $post) => [
+                        'id' => $post->id,
+                        'title' => $post->title,
+                    ])
+                    ->all(),
+            ])
+            ->all();
+    }
+
+    protected function saveNavigationCategoryOrder(array $categories, ?int $parentId = null): void
+    {
         foreach ($categories as $categoryIndex => $categoryData) {
             $category = Category::find($categoryData['id']);
 
-            if ($category) {
-                $category->sort = $categoryIndex;
-                $category->save();
-
-                foreach ($categoryData['posts'] as $postIndex => $postData) {
-                    $post = Post::find($postData['id']);
-
-                    if ($post) {
-                        $post->sort = $postIndex;
-                        $post->save();
-                    }
-                }
+            if (! $category) {
+                continue;
             }
+
+            $category->parent_id = $parentId;
+            $category->sort = $categoryIndex;
+            $category->save();
+
+            foreach ($categoryData['posts'] ?? [] as $postIndex => $postData) {
+                $post = Post::find($postData['id']);
+
+                if (! $post) {
+                    continue;
+                }
+
+                $post->sort = $postIndex;
+                $post->save();
+            }
+
+            $this->saveNavigationCategoryOrder($categoryData['children'] ?? [], $category->id);
         }
-
-        Notification::make()
-            ->title(__('Settings saved successfully.'))
-            ->success()
-            ->send();
-
-        redirect(request()?->header('Referer'));
     }
 }

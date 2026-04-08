@@ -29,6 +29,16 @@ class DatabaseSeeder extends Seeder
                         $post->attachTags($tags->random(3));
                     })
             )
+            ->has(
+                Category::factory(3)
+                    ->has(
+                        Post::factory(4)
+                            ->afterCreating(function (Post $post) use ($tags) {
+                                $post->attachTags($tags->random(3));
+                            })
+                    ),
+                'children'
+            )
             ->createQuietly();
     }
 }

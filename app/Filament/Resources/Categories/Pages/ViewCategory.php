@@ -23,7 +23,11 @@ class ViewCategory extends ViewRecord
             CategoryResource::getUrl() => CategoryResource::getBreadcrumb(),
         ];
 
-        $breadcrumbs += parent::getBreadcrumbs();
+        foreach ($this->record->getAncestors() as $category) {
+            $breadcrumbs[CategoryResource::getUrl('view', ['record' => $category])] = $category->name;
+        }
+
+        $breadcrumbs[] = $this->getBreadcrumb();
 
         return $breadcrumbs;
     }

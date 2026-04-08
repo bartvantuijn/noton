@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Categories\Schemas;
 
 use App\Enums\Visibility;
+use App\Models\Category;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Schema;
@@ -20,8 +22,13 @@ class CategoryForm
         return [
             TextInput::make('name')
                 ->label(__('Name'))
-                ->required()
-                ->columnSpan('full'),
+                ->required(),
+            Select::make('parent_id')
+                ->label(__('Parent'))
+                ->relationship(name: 'parent', titleAttribute: 'name')
+                ->getOptionLabelFromRecordUsing(fn (Category $record): string => $record->getSelectLabel())
+                ->searchable()
+                ->preload(),
             ToggleButtons::make('visibility')
                 ->label(__('Visibility'))
                 ->required()

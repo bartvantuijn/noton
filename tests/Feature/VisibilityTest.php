@@ -76,4 +76,63 @@ class VisibilityTest extends TestCase
         $this->get(CategoryResource::getUrl('view', ['record' => $category]))
             ->assertRedirect(route('filament.admin.auth.login'));
     }
+
+    public function test_guests_are_redirected_from_public_categories_inside_private_categories(): void
+    {
+        User::factory()->create();
+
+        $parent = Category::factory()->create([
+            'visibility' => Visibility::Private,
+        ]);
+
+        $child = Category::factory()->create([
+            'parent_id' => $parent->id,
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->get(CategoryResource::getUrl('view', ['record' => $child]))
+            ->assertRedirect(route('filament.admin.auth.login'));
+    }
+
+    public function test_guests_cannot_view_public_posts_inside_private_category_branches(): void
+    {
+        User::factory()->create();
+
+        $parent = Category::factory()->create([
+            'visibility' => Visibility::Private,
+        ]);
+
+        $child = Category::factory()->create([
+            'parent_id' => $parent->id,
+            'visibility' => Visibility::Public,
+        ]);
+
+        $post = Post::factory()->for($child)->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->get(PostResource::getUrl('view', ['record' => $post]))
+            ->assertRedirect(route('filament.admin.auth.login'));
+    }
+
+    public function test_guest_queries_hide_public_items_inside_private_category_branches(): void
+    {
+        User::factory()->create();
+
+        $parent = Category::factory()->create([
+            'visibility' => Visibility::Private,
+        ]);
+
+        $child = Category::factory()->create([
+            'parent_id' => $parent->id,
+            'visibility' => Visibility::Public,
+        ]);
+
+        $post = Post::factory()->for($child)->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->assertFalse(Category::pluck('id')->contains($child->id));
+        $this->assertFalse(Post::pluck('id')->contains($post->id));
+    }
 }
