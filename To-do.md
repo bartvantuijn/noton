@@ -1,5 +1,6 @@
 # To-do
 
+- Update screenshots
 - Improve Ollama context retrieval when needed
 - Improve AI search quality when the documentation grows
 - Implement Laravel Lang
