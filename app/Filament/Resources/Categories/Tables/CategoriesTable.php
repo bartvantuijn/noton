@@ -20,6 +20,10 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->label(__('Name'))
                     ->searchable(),
+                TextColumn::make('parent.name')
+                    ->label(__('Parent'))
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('posts_count')
                     ->label(__('Posts'))
                     ->badge()

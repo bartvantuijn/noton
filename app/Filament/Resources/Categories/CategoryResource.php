@@ -52,9 +52,18 @@ class CategoryResource extends Resource
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
-        return [
+        $details = [
             __('Posts') => $record->posts->count(),
         ];
+
+        if ($record->parent) {
+            $details = [
+                __('Parent') => $record->parent->name,
+                ...$details,
+            ];
+        }
+
+        return $details;
     }
 
     public static function getGlobalSearchResultUrl(Model $record): string
@@ -70,6 +79,20 @@ class CategoryResource extends Resource
                     ->heading(fn (Category $record) => $record->name)
                     ->afterHeader(fn (Category $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
+                        TextEntry::make('parent.name')
+                            ->label(__('Parent'))
+                            ->visible(fn (Category $record) => filled($record->parent_id))
+                            ->url(fn (Category $record) => static::getUrl('view', ['record' => $record->parent]))
+                            ->icon(Heroicon::OutlinedFolder),
+                        RepeatableEntry::make('children')
+                            ->label(__('Subcategories'))
+                            ->visible(fn (Category $record) => $record->children()->exists())
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->hiddenLabel()
+                                    ->url(fn (Category $category) => static::getUrl('view', ['record' => $category]))
+                                    ->icon(Heroicon::OutlinedFolder),
+                            ]),
                         RepeatableEntry::make('posts')
                             ->label(__('Posts'))
                             ->schema([

@@ -29,9 +29,11 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
@@ -104,30 +106,110 @@ class AdminPanelProvider extends PanelProvider
             ->when(Gate::allows('viewAny', Post::class), fn ($builder) => $builder->items(PostResource::getNavigationItems()))
             ->when(Gate::allows('viewAny', User::class), fn ($builder) => $builder->items(UserResource::getNavigationItems()))
             ->when(Gate::allows('viewAny', Setting::class), fn ($builder) => $builder->items(Settings::getNavigationItems()))
-            ->groups(
-                Category::with(['posts' => fn ($posts) => $posts->orderBy('sort')])
-                    ->orderBy('sort')
-                    ->get()
-                    ->map(function ($category) {
-                        return NavigationGroup::make($category->name)
-                            ->icon(Heroicon::OutlinedFolder)
-                            ->items(
-                                collect(
-                                    $category->posts->map(function ($post) {
-                                        return NavigationItem::make($post->title)
-                                            ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
-                                            ->isActiveWhen(fn () => (request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit')) && request()->route('record') == $post->id);
-                                    })
-                                )
-                                    ->push(
-                                        NavigationItem::make(__('Create post'))
-                                            ->badge('+')
-                                            ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
-                                            ->visible(Gate::allows('create', Post::class))
-                                    )
-                                    ->toArray()
-                            );
-                    })->toArray()
+            ->groups($this->getCategoryNavigationGroups());
+    }
+
+    protected function getCategoryNavigationGroups(): array
+    {
+        $categories = Category::with(['posts' => fn ($posts) => $posts->orderBy('sort')])
+            ->orderBy('sort')
+            ->get();
+
+        $groupedCategories = $categories->groupBy('parent_id');
+
+        // Only root categories become sidebar groups.
+        return $categories
+            ->whereNull('parent_id')
+            ->map(fn (Category $category) => NavigationGroup::make($category->name)
+                ->icon(Heroicon::OutlinedFolder)
+                ->items($this->getCategoryNavigationItems($category, $groupedCategories)))
+            ->all();
+    }
+
+    protected function getCategoryNavigationItems(Category $category, Collection $categories, int $depth = 0): array
+    {
+        $items = collect();
+
+        if ($depth === 0 || $this->isCategoryBranchActive($category, $categories)) {
+            foreach ($categories->get($category->id, collect()) as $child) {
+                $items->push(
+                    NavigationItem::make($child->name)
+                        ->badge($this->isCategoryBranchActive($child, $categories) ? '▾' : '▸', $this->isCategoryBranchActive($child, $categories) ? 'primary' : 'gray')
+                        ->icon(Heroicon::OutlinedFolder)
+                        ->url(CategoryResource::getUrl('view', ['record' => $child]))
+                        ->isActiveWhen(fn () => $this->isCategoryActive($child))
+                );
+
+                $items = $items->merge($this->getCategoryNavigationItems($child, $categories, $depth + 1));
+            }
+        }
+
+        if ($depth === 0 || $this->isCategoryActive($category)) {
+            $items = $items->merge(
+                $category->posts->map(function ($post) {
+                    return NavigationItem::make($post->title)
+                        ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
+                        ->isActiveWhen(fn () => (request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit')) && $this->getCurrentRecordId() == $post->id);
+                })
             );
+
+            if (Gate::allows('create', Post::class)) {
+                $items->push(
+                    NavigationItem::make(__('Create post'))
+                        ->badge('+')
+                        ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
+                );
+            }
+        }
+
+        return $items->all();
+    }
+
+    protected function isCategoryActive(Category $category): bool
+    {
+        $recordId = $this->getCurrentRecordId();
+        $categoryId = request()->integer('category_id');
+
+        if ((request()->routeIs('filament.admin.resources.categories.view') || request()->routeIs('filament.admin.resources.categories.edit'))
+            && $recordId == $category->id) {
+            return true;
+        }
+
+        if ((request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit'))
+            && $category->posts->contains('id', $recordId)) {
+            return true;
+        }
+
+        if (request()->routeIs('filament.admin.resources.posts.create') && $categoryId === $category->id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getCurrentRecordId(): int | string | null
+    {
+        $record = request()->route('record');
+
+        if ($record instanceof EloquentModel) {
+            return $record->getKey();
+        }
+
+        return $record;
+    }
+
+    protected function isCategoryBranchActive(Category $category, Collection $categories): bool
+    {
+        if ($this->isCategoryActive($category)) {
+            return true;
+        }
+
+        foreach ($categories->get($category->id, collect()) as $child) {
+            if ($this->isCategoryBranchActive($child, $categories)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

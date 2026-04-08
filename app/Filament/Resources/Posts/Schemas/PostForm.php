@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Posts\Schemas;
 
 use App\Enums\Visibility;
 use App\Filament\Resources\Categories\Schemas\CategoryForm;
+use App\Models\Category;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieTagsInput;
@@ -30,6 +31,7 @@ class PostForm
                 ->required()
                 ->default(request('category_id'))
                 ->relationship(name: 'category', titleAttribute: 'name')
+                ->getOptionLabelFromRecordUsing(fn (Category $record): string => $record->getSelectLabel())
                 ->searchable()
                 ->preload()
                 ->createOptionForm(CategoryForm::getFormComponents()),

@@ -55,3 +55,14 @@ html.dark .phiki span {
 #content code:after {
     content: "";
 }
+
+/* Sidebar badges */
+.fi-sidebar-item .fi-badge {
+    min-width: 1.75rem;
+    padding-inline: 0.25rem;
+}
+
+.fi-sidebar-item .fi-badge .fi-badge-label {
+    font-size: calc(var(--spacing) * 5);
+    line-height: 1;
+}

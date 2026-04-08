@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\Visibility;
 use App\Models\Category;
 use App\Models\Post;
 use Closure;
@@ -38,7 +37,7 @@ class RedirectToLogin
         if ($request->routeIs('filament.admin.resources.categories.view')) {
             $category = Category::withoutGlobalScopes()->find($request->route('record'));
 
-            if ($category?->visibility === Visibility::Private) {
+            if ($category?->isEffectivelyPrivate()) {
                 return $this->redirect();
             }
         }
@@ -49,7 +48,7 @@ class RedirectToLogin
                 ->with(['category' => fn ($query) => $query->withoutGlobalScopes()])
                 ->find($request->route('record'));
 
-            if ($post && ($post->visibility === Visibility::Private || $post->category->visibility === Visibility::Private)) {
+            if ($post?->isEffectivelyPrivate()) {
                 return $this->redirect();
             }
         }
