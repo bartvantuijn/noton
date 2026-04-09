@@ -21,6 +21,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Phiki\CommonMark\PhikiExtension;
 
 class CategoryResource extends Resource
 {
@@ -42,7 +44,7 @@ class CategoryResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name'];
+        return ['name', 'content'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string
@@ -101,6 +103,17 @@ class CategoryResource extends Resource
                                     ->url(fn (Post $post) => PostResource::getUrl('view', ['record' => $post]))
                                     ->icon(Heroicon::OutlinedDocumentText),
                             ]),
+                        TextEntry::make('content')
+                            ->hiddenLabel()
+                            ->markdown()
+                            ->visible(fn (?string $state) => filled($state))
+                            ->formatStateUsing(function ($state) {
+                                return Str::markdown($state, extensions: [new PhikiExtension([
+                                    'light' => 'github-light-default',
+                                    'dark' => 'github-dark-default',
+                                ])]);
+                            })
+                            ->extraAttributes(['id' => 'content']),
                     ])->columnSpanFull(),
             ]);
     }

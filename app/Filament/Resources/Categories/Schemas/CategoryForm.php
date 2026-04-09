@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Categories\Schemas;
 
 use App\Enums\Visibility;
 use App\Models\Category;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -35,6 +36,8 @@ class CategoryForm
                 ->default(Visibility::Public)
                 ->options(Visibility::class)
                 ->grouped(),
+            MarkdownEditor::make('content')
+                ->columnSpanFull(),
         ];
     }
 }
