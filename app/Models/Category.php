@@ -53,7 +53,16 @@ class Category extends Model
 
     public function getSelectLabel(): string
     {
-        return $this->name . ($this->visibility === Visibility::Private ? ' (' . __('Private') . ')' : '');
+        $label = $this->getAncestors()
+            ->pluck('name')
+            ->push($this->name)
+            ->join(' / ');
+
+        if ($this->visibility === Visibility::Private) {
+            $label .= ' (' . __('Private') . ')';
+        }
+
+        return $label;
     }
 
     public function getAncestors(): Collection

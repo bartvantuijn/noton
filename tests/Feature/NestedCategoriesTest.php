@@ -56,4 +56,19 @@ class NestedCategoriesTest extends TestCase
             'parent_id' => $parent->id,
         ]);
     }
+
+    public function test_select_label_includes_parent_categories(): void
+    {
+        $parent = Category::factory()->create([
+            'name' => 'News',
+        ]);
+
+        $child = Category::factory()->create([
+            'name' => 'Updates',
+            'parent_id' => $parent->id,
+            'visibility' => Visibility::Private,
+        ]);
+
+        $this->assertSame('News / Updates (Private)', $child->getSelectLabel());
+    }
 }
