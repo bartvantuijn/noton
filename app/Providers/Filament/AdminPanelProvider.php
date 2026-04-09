@@ -153,7 +153,7 @@ class AdminPanelProvider extends PanelProvider
                 })
             );
 
-            if (Gate::allows('create', Post::class)) {
+            if ($depth === 0 && Gate::allows('create', Post::class)) {
                 $items->push(
                     NavigationItem::make(__('Create post'))
                         ->badge('+')
