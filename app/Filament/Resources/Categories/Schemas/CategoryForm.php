@@ -26,7 +26,7 @@ class CategoryForm
                 ->required(),
             Select::make('parent_id')
                 ->label(__('Parent'))
-                ->relationship(name: 'parent', titleAttribute: 'name')
+                ->relationship(name: 'parent', titleAttribute: 'name', modifyQueryUsing: fn ($query) => $query->orderBy('sort'))
                 ->getOptionLabelFromRecordUsing(fn (Category $record): string => $record->getSelectLabel())
                 ->searchable()
                 ->preload(),

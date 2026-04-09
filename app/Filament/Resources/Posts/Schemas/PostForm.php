@@ -30,7 +30,7 @@ class PostForm
                 ->label(__('Category'))
                 ->required()
                 ->default(request('category_id'))
-                ->relationship(name: 'category', titleAttribute: 'name')
+                ->relationship(name: 'category', titleAttribute: 'name', modifyQueryUsing: fn ($query) => $query->orderBy('sort'))
                 ->getOptionLabelFromRecordUsing(fn (Category $record): string => $record->getSelectLabel())
                 ->searchable()
                 ->preload()
