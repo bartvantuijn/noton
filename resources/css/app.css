@@ -66,3 +66,17 @@ html.dark .phiki span {
     font-size: calc(var(--spacing) * 5);
     line-height: 1;
 }
+
+/* Setting repeater */
+.settings-navigation-repeater .fi-fo-repeater-item-content {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.settings-navigation-repeater--children .fi-fo-repeater-item-content {
+    padding-bottom: 1rem;
+}
+
+.settings-navigation-repeater--posts .fi-fo-repeater-item-content {
+    padding-bottom: 0;
+}

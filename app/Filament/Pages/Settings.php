@@ -200,6 +200,11 @@ class Settings extends Page
                         ->hiddenLabel()
                         ->addable(false)
                         ->deletable(false)
+                        ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--children'])
+                        ->collapsible()
+                        ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                        ->collapseAllAction(fn (Action $action) => $action->hidden())
+                        ->expandAllAction(fn (Action $action) => $action->hidden())
                         ->schema($this->getCategoryNavigationSchema()),
                 ]),
         ];
@@ -253,24 +258,26 @@ class Settings extends Page
     protected function getCategoryNavigationSchema(): array
     {
         return [
-            TextInput::make('name')
-                ->hiddenLabel()
-                ->disabled(),
             Repeater::make('children')
-                ->label(__('Subcategories'))
+                ->hiddenLabel()
                 ->visible(fn (?array $state): bool => filled($state))
                 ->addable(false)
                 ->deletable(false)
+                ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--children'])
+                ->collapsible()
+                ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
+                ->collapseAllAction(fn (Action $action) => $action->hidden())
+                ->expandAllAction(fn (Action $action) => $action->hidden())
                 ->schema(fn () => $this->getCategoryNavigationSchema()),
             Repeater::make('posts')
-                ->label(__('Posts'))
+                ->hiddenLabel()
                 ->addable(false)
                 ->deletable(false)
-                ->schema([
-                    TextInput::make('title')
-                        ->hiddenLabel()
-                        ->disabled(),
-                ]),
+                ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--posts'])
+                ->collapsible()
+                ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
+                ->collapseAllAction(fn (Action $action) => $action->hidden())
+                ->expandAllAction(fn (Action $action) => $action->hidden()),
         ];
     }
 
