@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.9](https://github.com/bartvantuijn/noton/compare/v1.0.8...v1.0.9) (2026-10-04)
+
+* Add content to categories
+* Show category path in select labels
+* Only show create post link for top-level categories
+* Add create post action to category view
+* Change category select sorting
+* Improve navigation sorting in settings
+* Update dependencies
+* Update workflow PHP version
+* Simplify navigation sorting and category selects
+* Add global notice
+* Add general improvements
+
 ## [1.0.8](https://github.com/bartvantuijn/noton/compare/v1.0.7...v1.0.8) (2026-09-04)
 
 * Add nested categories

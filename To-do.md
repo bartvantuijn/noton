@@ -1,6 +1,10 @@
 # To-do
 
 - Update screenshots
+- Build URL's from name/title
+- Be able to hide categories/posts from sidebar
+
+- Audit trail for categories/posts
 - Improve Ollama context retrieval when needed
 - Improve AI search quality when the documentation grows
 - Implement Laravel Lang
