@@ -81,6 +81,12 @@ class AppServiceProvider extends ServiceProvider
             '),
         );
 
+        // Register notice render hook
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::TOPBAR_AFTER,
+            fn (): string => Blade::render(view('filament.components.notice')->render()),
+        );
+
         // Register quick actions render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::BODY_END,

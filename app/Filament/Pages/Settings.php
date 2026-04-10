@@ -12,7 +12,9 @@ use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -83,6 +85,7 @@ class Settings extends Page
                 ],
             ],
             'appearance' => $this->setting->get('appearance'),
+            'notice' => $this->setting->get('notice'),
             'categories' => $this->getNavigationCategoryData(),
         ]);
     }
@@ -192,6 +195,30 @@ class Settings extends Page
                         ->downloadable(),
                 ])->columns(3),
 
+            Section::make(__('Notice'))
+                ->collapsible()
+                ->schema([
+                    Toggle::make('notice.enabled')
+                        ->label(__('Enabled'))
+                        ->columnSpanFull(),
+                    TextInput::make('notice.title')
+                        ->label(__('Title')),
+                    Select::make('notice.style')
+                        ->label(__('Style'))
+                        ->options([
+                            'info' => __('Info'),
+                            'success' => __('Success'),
+                            'warning' => __('Warning'),
+                            'danger' => __('Danger'),
+                        ])
+                        ->default('info')
+                        ->native(false),
+                    Textarea::make('notice.message')
+                        ->label(__('Message'))
+                        ->rows(4)
+                        ->columnSpanFull(),
+                ])->columns(2),
+
             Section::make(__('Navigation'))
                 ->collapsible()
                 ->visible(fn () => App::hasCategories())
@@ -212,10 +239,12 @@ class Settings extends Page
 
                 $ai = $state['ai'] ?? [];
                 $appearance = $state['appearance'] ?? [];
+                $notice = $state['notice'] ?? [];
                 $categories = $state['categories'] ?? [];
 
                 $this->setting->set('ai', $ai);
                 $this->setting->set('appearance', $appearance);
+                $this->setting->set('notice', $notice);
 
                 $this->saveNavigationCategoryOrder($categories);
             });
