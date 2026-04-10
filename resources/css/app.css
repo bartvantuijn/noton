@@ -76,3 +76,13 @@ html.dark .phiki span {
 .settings-navigation-repeater--posts .fi-fo-repeater-item-content {
     padding-bottom: 0;
 }
+
+/* Markdown editor */
+.fi-fo-markdown-editor,
+.fi-fo-markdown-editor .EasyMDEContainer,
+.fi-fo-markdown-editor .CodeMirror,
+.fi-fo-markdown-editor .CodeMirror-scroll,
+.fi-fo-markdown-editor .editor-preview,
+.fi-fo-markdown-editor .editor-preview-side {
+    font-family: var(--default-font-family), ui-sans-serif, system-ui, sans-serif;
+}
