@@ -30,10 +30,15 @@ class PostForm
                 ->label(__('Category'))
                 ->required()
                 ->default(request('category_id'))
-                ->relationship(name: 'category', titleAttribute: 'name', modifyQueryUsing: fn ($query) => $query->orderBy('sort'))
-                ->getOptionLabelFromRecordUsing(fn (Category $record): string => $record->getSelectLabel())
+                ->options(fn (): array => Category::getSelectOptions())
                 ->searchable()
                 ->preload()
+                ->createOptionUsing(function (array $data): int {
+                    $category = new Category($data);
+                    $category->save();
+
+                    return $category->getKey();
+                })
                 ->createOptionForm(CategoryForm::getFormComponents()),
             ToggleButtons::make('visibility')
                 ->label(__('Visibility'))

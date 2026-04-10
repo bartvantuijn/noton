@@ -65,6 +65,17 @@ class Category extends Model
         return $label;
     }
 
+    public static function getSelectOptions(): array
+    {
+        $categories = self::query()
+            ->orderBy('sort')
+            ->get(['id', 'name', 'parent_id', 'visibility']);
+
+        $groupedCategories = $categories->groupBy('parent_id');
+
+        return self::buildSelectOptions($groupedCategories);
+    }
+
     public function getAncestors(): Collection
     {
         $ancestors = collect();
@@ -106,5 +117,24 @@ class Category extends Model
 
             $parent = $parent->parent()->withoutGlobalScopes()->first();
         }
+    }
+
+    protected static function buildSelectOptions(Collection $groupedCategories, ?int $parentId = null, array $ancestors = []): array
+    {
+        $options = [];
+
+        foreach ($groupedCategories->get($parentId, collect()) as $category) {
+            $path = [...$ancestors, $category->name];
+            $label = implode(' / ', $path);
+
+            if ($category->visibility === Visibility::Private) {
+                $label .= ' (' . __('Private') . ')';
+            }
+
+            $options[$category->id] = $label;
+            $options += self::buildSelectOptions($groupedCategories, $category->id, $path);
+        }
+
+        return $options;
     }
 }

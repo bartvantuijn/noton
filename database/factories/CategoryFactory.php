@@ -20,6 +20,21 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => ucwords(fake()->words(2, true)),
+            'content' => implode("\n\n", [
+                '# ' . ucfirst(fake()->words(3, true)),
+                fake()->paragraph(),
+                '> ' . fake()->sentence(),
+                '## ' . ucfirst(fake()->words(3, true)),
+                '```php
+<?php
+    echo "Hello Noton!";
+?>
+```',
+                fake()->paragraph(),
+                '- ' . ucfirst(fake()->words(3, true)),
+                '- ' . ucfirst(fake()->words(3, true)),
+                '- ' . ucfirst(fake()->words(3, true)),
+            ]),
             'visibility' => fake()->randomElement(Visibility::values()),
             'created_at' => $created = fake()->dateTimeBetween('-1 years'),
             'updated_at' => fake()->dateTimeBetween($created),

@@ -23,7 +23,7 @@ pre, code {
 
 /* Phiki styling */
 .phiki {
-    margin: 1rem 0;
+    margin: 0;
     padding: 1rem;
 }
 
@@ -67,14 +67,10 @@ html.dark .phiki span {
     line-height: 1;
 }
 
-/* Setting repeater */
+/* Settings navigation repeater */
 .settings-navigation-repeater .fi-fo-repeater-item-content {
     border-top: 0;
     padding-top: 0;
-}
-
-.settings-navigation-repeater--children .fi-fo-repeater-item-content {
-    padding-bottom: 1rem;
 }
 
 .settings-navigation-repeater--posts .fi-fo-repeater-item-content {

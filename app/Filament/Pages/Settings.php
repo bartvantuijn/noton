@@ -196,15 +196,7 @@ class Settings extends Page
                 ->collapsible()
                 ->visible(fn () => App::hasCategories())
                 ->schema([
-                    Repeater::make('categories')
-                        ->hiddenLabel()
-                        ->addable(false)
-                        ->deletable(false)
-                        ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--children'])
-                        ->collapsible()
-                        ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
-                        ->collapseAllAction(fn (Action $action) => $action->hidden())
-                        ->expandAllAction(fn (Action $action) => $action->hidden())
+                    $this->getNavigationRepeater('categories', 'name')
                         ->schema($this->getCategoryNavigationSchema()),
                 ]),
         ];
@@ -244,51 +236,55 @@ class Settings extends Page
 
     protected function getNavigationCategoryData(): array
     {
-        $categories = Category::with([
-            'posts' => fn ($query) => $query->orderBy('sort'),
-            'children' => fn ($query) => $query->orderBy('sort'),
-        ])
+        $categories = Category::query()
             ->whereNull('parent_id')
             ->orderBy('sort')
             ->get();
 
-        return $this->mapNavigationCategories($categories);
+        $children = Category::query()
+            ->orderBy('sort')
+            ->get(['id', 'name', 'parent_id'])
+            ->groupBy('parent_id');
+
+        $posts = Post::query()
+            ->orderBy('sort')
+            ->get(['id', 'title', 'category_id'])
+            ->groupBy('category_id');
+
+        return $this->mapNavigationCategories($categories, $children, $posts);
     }
 
     protected function getCategoryNavigationSchema(): array
     {
         return [
-            Repeater::make('children')
-                ->hiddenLabel()
+            $this->getNavigationRepeater('children', 'name')
                 ->visible(fn (?array $state): bool => filled($state))
-                ->addable(false)
-                ->deletable(false)
-                ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--children'])
-                ->collapsible()
-                ->itemLabel(fn (array $state): ?string => $state['name'] ?? null)
-                ->collapseAllAction(fn (Action $action) => $action->hidden())
-                ->expandAllAction(fn (Action $action) => $action->hidden())
                 ->schema(fn () => $this->getCategoryNavigationSchema()),
-            Repeater::make('posts')
-                ->hiddenLabel()
-                ->addable(false)
-                ->deletable(false)
-                ->extraAttributes(['class' => 'settings-navigation-repeater settings-navigation-repeater--posts'])
-                ->collapsible()
-                ->itemLabel(fn (array $state): ?string => $state['title'] ?? null)
-                ->collapseAllAction(fn (Action $action) => $action->hidden())
-                ->expandAllAction(fn (Action $action) => $action->hidden()),
+            $this->getNavigationRepeater('posts', 'title', 'settings-navigation-repeater settings-navigation-repeater--posts'),
         ];
     }
 
-    protected function mapNavigationCategories(Collection $categories): array
+    protected function getNavigationRepeater(string $name, string $label, string $class = 'settings-navigation-repeater'): Repeater
+    {
+        return Repeater::make($name)
+            ->hiddenLabel()
+            ->addable(false)
+            ->deletable(false)
+            ->extraAttributes(['class' => $class])
+            ->collapsible()
+            ->itemLabel(fn (array $state): ?string => $state[$label] ?? null)
+            ->collapseAllAction(fn (Action $action) => $action->hidden())
+            ->expandAllAction(fn (Action $action) => $action->hidden());
+    }
+
+    protected function mapNavigationCategories(Collection $categories, Collection $children, Collection $posts): array
     {
         return $categories
             ->map(fn (Category $category) => [
                 'id' => $category->id,
                 'name' => $category->name,
-                'children' => $this->mapNavigationCategories($category->children),
-                'posts' => $category->posts
+                'children' => $this->mapNavigationCategories($children->get($category->id, collect()), $children, $posts),
+                'posts' => $posts->get($category->id, collect())
                     ->map(fn (Post $post) => [
                         'id' => $post->id,
                         'title' => $post->title,
