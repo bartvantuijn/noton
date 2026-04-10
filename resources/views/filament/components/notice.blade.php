@@ -8,7 +8,7 @@
     $enabled = (bool) Arr::get($notice, 'enabled', false);
     $title = (string) Arr::get($notice, 'title', '');
     $message = (string) Arr::get($notice, 'message', '');
-    $style = (string) Arr::get($notice, 'style', 'info');
+    $style = (string) Arr::get($notice, 'style', 'primary');
 
     $icon = match ($style) {
         'success' => Heroicon::OutlinedCheckCircle,
@@ -21,7 +21,7 @@
         'success' => 'success',
         'warning' => 'warning',
         'danger' => 'danger',
-        default => 'info',
+        default => 'primary',
     };
 
     $storageKey = 'notice';

@@ -130,6 +130,7 @@ class AdminPanelProvider extends PanelProvider
     {
         $items = collect();
 
+        // Show nested categories only for the open branch.
         if ($depth === 0 || $this->isCategoryBranchActive($category, $categories)) {
             foreach ($categories->get($category->id, collect()) as $child) {
                 $items->push(
@@ -144,6 +145,7 @@ class AdminPanelProvider extends PanelProvider
             }
         }
 
+        // Show posts on the root level and inside the active category.
         if ($depth === 0 || $this->isCategoryActive($category)) {
             $items = $items->merge(
                 $category->posts->map(function ($post) {
@@ -153,6 +155,7 @@ class AdminPanelProvider extends PanelProvider
                 })
             );
 
+            // Keep the quick create action on root categories.
             if ($depth === 0 && Gate::allows('create', Post::class)) {
                 $items->push(
                     NavigationItem::make(__('Create post'))
@@ -187,17 +190,6 @@ class AdminPanelProvider extends PanelProvider
         return false;
     }
 
-    protected function getCurrentRecordId(): int | string | null
-    {
-        $record = request()->route('record');
-
-        if ($record instanceof EloquentModel) {
-            return $record->getKey();
-        }
-
-        return $record;
-    }
-
     protected function isCategoryBranchActive(Category $category, Collection $categories): bool
     {
         if ($this->isCategoryActive($category)) {
@@ -211,5 +203,16 @@ class AdminPanelProvider extends PanelProvider
         }
 
         return false;
+    }
+
+    protected function getCurrentRecordId(): int | string | null
+    {
+        $record = request()->route('record');
+
+        if ($record instanceof EloquentModel) {
+            return $record->getKey();
+        }
+
+        return $record;
     }
 }

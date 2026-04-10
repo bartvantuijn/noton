@@ -81,6 +81,7 @@ class Category extends Model
         $ancestors = collect();
         $parent = $this->parent()->withoutGlobalScopes()->first();
 
+        // Walk up the tree from the current category.
         while ($parent) {
             $ancestors->prepend($parent);
             $parent = $parent->parent()->withoutGlobalScopes()->first();
@@ -108,6 +109,7 @@ class Category extends Model
 
         $parent = self::withoutGlobalScopes()->find($this->parent_id);
 
+        // Stop categories from ending up inside their own branch.
         while ($parent) {
             if ($parent->id === $this->id) {
                 throw ValidationException::withMessages([
@@ -123,6 +125,7 @@ class Category extends Model
     {
         $options = [];
 
+        // Build labels recursively so the full path is visible in selects.
         foreach ($groupedCategories->get($parentId, collect()) as $category) {
             $path = [...$ancestors, $category->name];
             $label = implode(' / ', $path);

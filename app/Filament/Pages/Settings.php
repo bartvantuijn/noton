@@ -206,7 +206,7 @@ class Settings extends Page
                     Select::make('notice.style')
                         ->label(__('Style'))
                         ->options([
-                            'info' => __('Info'),
+                            'primary' => __('Info'),
                             'success' => __('Success'),
                             'warning' => __('Warning'),
                             'danger' => __('Danger'),
@@ -283,29 +283,6 @@ class Settings extends Page
         return $this->mapNavigationCategories($categories, $children, $posts);
     }
 
-    protected function getCategoryNavigationSchema(): array
-    {
-        return [
-            $this->getNavigationRepeater('children', 'name')
-                ->visible(fn (?array $state): bool => filled($state))
-                ->schema(fn () => $this->getCategoryNavigationSchema()),
-            $this->getNavigationRepeater('posts', 'title', 'settings-navigation-repeater settings-navigation-repeater--posts'),
-        ];
-    }
-
-    protected function getNavigationRepeater(string $name, string $label, string $class = 'settings-navigation-repeater'): Repeater
-    {
-        return Repeater::make($name)
-            ->hiddenLabel()
-            ->addable(false)
-            ->deletable(false)
-            ->extraAttributes(['class' => $class])
-            ->collapsible()
-            ->itemLabel(fn (array $state): ?string => $state[$label] ?? null)
-            ->collapseAllAction(fn (Action $action) => $action->hidden())
-            ->expandAllAction(fn (Action $action) => $action->hidden());
-    }
-
     protected function mapNavigationCategories(Collection $categories, Collection $children, Collection $posts): array
     {
         return $categories
@@ -321,6 +298,29 @@ class Settings extends Page
                     ->all(),
             ])
             ->all();
+    }
+
+    protected function getNavigationRepeater(string $name, string $label, string $class = 'settings-navigation-repeater'): Repeater
+    {
+        return Repeater::make($name)
+            ->hiddenLabel()
+            ->addable(false)
+            ->deletable(false)
+            ->extraAttributes(['class' => $class])
+            ->collapsible()
+            ->itemLabel(fn (array $state): ?string => $state[$label] ?? null)
+            ->collapseAllAction(fn (Action $action) => $action->hidden())
+            ->expandAllAction(fn (Action $action) => $action->hidden());
+    }
+
+    protected function getCategoryNavigationSchema(): array
+    {
+        return [
+            $this->getNavigationRepeater('children', 'name')
+                ->visible(fn (?array $state): bool => filled($state))
+                ->schema(fn () => $this->getCategoryNavigationSchema()),
+            $this->getNavigationRepeater('posts', 'title', 'settings-navigation-repeater settings-navigation-repeater--posts'),
+        ];
     }
 
     protected function saveNavigationCategoryOrder(array $categories, ?int $parentId = null): void
