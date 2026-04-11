@@ -115,45 +115,50 @@ class AdminPanelProvider extends PanelProvider
             ->orderBy('sort')
             ->get();
 
-        $groupedCategories = $categories->groupBy('parent_id');
+        $children = $categories->groupBy('parent_id');
 
-        // Only root categories become sidebar groups.
-        return $categories
-            ->whereNull('parent_id')
+        // Collect the currently-active category and its ancestors — this is the open branch.
+        $activeIds = collect();
+        $current = $categories->first(fn (Category $category) => $this->isCategoryActive($category));
+
+        while ($current) {
+            $activeIds->push($current->id);
+            $current = $categories->firstWhere('id', $current->parent_id);
+        }
+
+        return $categories->whereNull('parent_id')
             ->map(fn (Category $category) => NavigationGroup::make($category->name)
                 ->icon(Heroicon::OutlinedFolder)
-                ->items($this->getCategoryNavigationItems($category, $groupedCategories)))
+                ->items($this->getCategoryNavigationItems($category, $children, $activeIds)))
             ->all();
     }
 
-    protected function getCategoryNavigationItems(Category $category, Collection $categories, int $depth = 0): array
+    protected function getCategoryNavigationItems(Category $category, Collection $children, Collection $activeIds, int $depth = 0): array
     {
         $items = collect();
 
-        // Show nested categories only for the open branch.
-        if ($depth === 0 || $this->isCategoryBranchActive($category, $categories)) {
-            foreach ($categories->get($category->id, collect()) as $child) {
+        // Show nested categories on the root level and inside the open branch.
+        if ($depth === 0 || $activeIds->contains($category->id)) {
+            foreach ($children->get($category->id, collect()) as $child) {
+                $active = $activeIds->contains($child->id);
+
                 $items->push(
                     NavigationItem::make($child->name)
-                        ->badge($this->isCategoryBranchActive($child, $categories) ? '▾' : '▸', $this->isCategoryBranchActive($child, $categories) ? 'primary' : 'gray')
+                        ->badge($active ? '▾' : '▸', $active ? 'primary' : 'gray')
                         ->icon(Heroicon::OutlinedFolder)
                         ->url(CategoryResource::getUrl('view', ['record' => $child]))
                         ->isActiveWhen(fn () => $this->isCategoryActive($child))
                 );
 
-                $items = $items->merge($this->getCategoryNavigationItems($child, $categories, $depth + 1));
+                $items = $items->merge($this->getCategoryNavigationItems($child, $children, $activeIds, $depth + 1));
             }
         }
 
         // Show posts on the root level and inside the active category.
         if ($depth === 0 || $this->isCategoryActive($category)) {
-            $items = $items->merge(
-                $category->posts->map(function ($post) {
-                    return NavigationItem::make($post->title)
-                        ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
-                        ->isActiveWhen(fn () => (request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit')) && $this->getCurrentRecordId() == $post->id);
-                })
-            );
+            $items = $items->merge($category->posts->map(fn (Post $post) => NavigationItem::make($post->title)
+                ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
+                ->isActiveWhen(fn () => request()->routeIs('filament.admin.resources.posts.view', 'filament.admin.resources.posts.edit') && $this->getCurrentRecordId() == $post->id)));
 
             // Keep the quick create action on root categories.
             if ($depth === 0 && Gate::allows('create', Post::class)) {
@@ -171,48 +176,22 @@ class AdminPanelProvider extends PanelProvider
     protected function isCategoryActive(Category $category): bool
     {
         $recordId = $this->getCurrentRecordId();
-        $categoryId = request()->integer('category_id');
 
-        if ((request()->routeIs('filament.admin.resources.categories.view') || request()->routeIs('filament.admin.resources.categories.edit'))
-            && $recordId == $category->id) {
+        if (request()->routeIs('filament.admin.resources.categories.view', 'filament.admin.resources.categories.edit') && $recordId == $category->id) {
             return true;
         }
 
-        if ((request()->routeIs('filament.admin.resources.posts.view') || request()->routeIs('filament.admin.resources.posts.edit'))
-            && $category->posts->contains('id', $recordId)) {
+        if (request()->routeIs('filament.admin.resources.posts.view', 'filament.admin.resources.posts.edit') && $category->posts->contains('id', $recordId)) {
             return true;
         }
 
-        if (request()->routeIs('filament.admin.resources.posts.create') && $categoryId === $category->id) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function isCategoryBranchActive(Category $category, Collection $categories): bool
-    {
-        if ($this->isCategoryActive($category)) {
-            return true;
-        }
-
-        foreach ($categories->get($category->id, collect()) as $child) {
-            if ($this->isCategoryBranchActive($child, $categories)) {
-                return true;
-            }
-        }
-
-        return false;
+        return request()->routeIs('filament.admin.resources.posts.create') && request()->integer('category_id') === $category->id;
     }
 
     protected function getCurrentRecordId(): int | string | null
     {
         $record = request()->route('record');
 
-        if ($record instanceof EloquentModel) {
-            return $record->getKey();
-        }
-
-        return $record;
+        return $record instanceof EloquentModel ? $record->getKey() : $record;
     }
 }

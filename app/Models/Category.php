@@ -109,15 +109,10 @@ class Category extends Model
 
         $parent = self::withoutGlobalScopes()->find($this->parent_id);
 
-        // Stop categories from ending up inside their own branch.
-        while ($parent) {
-            if ($parent->id === $this->id) {
-                throw ValidationException::withMessages([
-                    'parent_id' => __('A category cannot be nested inside its own child.'),
-                ]);
-            }
-
-            $parent = $parent->parent()->withoutGlobalScopes()->first();
+        if ($parent?->getAncestors()->contains('id', $this->id)) {
+            throw ValidationException::withMessages([
+                'parent_id' => __('A category cannot be nested inside its own child.'),
+            ]);
         }
     }
 

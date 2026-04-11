@@ -21,51 +21,17 @@ class VisibleScope implements Scope
             return;
         }
 
-        $hiddenCategoryIds = $this->getHiddenCategoryIds();
+        $hiddenCategoryIds = Category::withoutGlobalScopes()->get()
+            ->filter(fn (Category $category) => $category->isEffectivelyPrivate())
+            ->pluck('id');
 
         if ($model instanceof Category) {
-            if ($hiddenCategoryIds) {
-                $builder->whereNotIn('id', $hiddenCategoryIds);
-            }
-
-            return;
+            $builder->whereNotIn('id', $hiddenCategoryIds);
         }
 
         if ($model instanceof Post) {
-            $builder->where('visibility', Visibility::Public);
-
-            if ($hiddenCategoryIds) {
-                $builder->whereNotIn('category_id', $hiddenCategoryIds);
-            }
+            $builder->where('visibility', Visibility::Public)
+                ->whereNotIn('category_id', $hiddenCategoryIds);
         }
-    }
-
-    protected function getHiddenCategoryIds(): array
-    {
-        $categories = Category::withoutGlobalScopes()
-            ->get(['id', 'parent_id', 'visibility'])
-            ->groupBy('parent_id');
-
-        // Start with categories that are explicitly private.
-        $hiddenIds = Category::withoutGlobalScopes()
-            ->where('visibility', Visibility::Private)
-            ->pluck('id')
-            ->all();
-
-        $queue = $hiddenIds;
-
-        // Every child of a private category should be hidden for guests too.
-        while ($parentId = array_shift($queue)) {
-            foreach ($categories->get($parentId, []) as $category) {
-                if (in_array($category->id, $hiddenIds, true)) {
-                    continue;
-                }
-
-                $hiddenIds[] = $category->id;
-                $queue[] = $category->id;
-            }
-        }
-
-        return $hiddenIds;
     }
 }

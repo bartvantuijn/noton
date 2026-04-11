@@ -25,8 +25,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 class Settings extends Page
 {
@@ -233,34 +231,20 @@ class Settings extends Page
     {
         $this->setting = Setting::singleton();
 
-        try {
-            DB::transaction(function (): void {
-                $state = $this->form->getState();
+        $state = $this->form->getState();
 
-                $ai = $state['ai'] ?? [];
-                $appearance = $state['appearance'] ?? [];
-                $notice = $state['notice'] ?? [];
-                $categories = $state['categories'] ?? [];
+        $this->setting->set('ai', $state['ai'] ?? []);
+        $this->setting->set('appearance', $state['appearance'] ?? []);
+        $this->setting->set('notice', $state['notice'] ?? []);
 
-                $this->setting->set('ai', $ai);
-                $this->setting->set('appearance', $appearance);
-                $this->setting->set('notice', $notice);
+        $this->saveNavigationCategoryOrder($state['categories'] ?? []);
 
-                $this->saveNavigationCategoryOrder($categories);
-            });
+        Notification::make()
+            ->title(__('Settings saved successfully.'))
+            ->success()
+            ->send();
 
-            Notification::make()
-                ->title(__('Settings saved successfully.'))
-                ->success()
-                ->send();
-
-            redirect(request()?->header('Referer'));
-        } catch (ValidationException $exception) {
-            Notification::make()
-                ->title(collect($exception->errors())->flatten()->first())
-                ->danger()
-                ->send();
-        }
+        redirect(request()?->header('Referer'));
     }
 
     protected function getNavigationCategoryData(): array
