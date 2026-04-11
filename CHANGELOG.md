@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/bartvantuijn/noton/compare/v1.0.10...v1.0.11) (2026-11-04)
+
+* Increase AI provider chat timeouts
+* Simplify nested category logic
+* Add codebase guidance for AI assistants
+* Add general improvements
+
 ## [1.0.10](https://github.com/bartvantuijn/noton/compare/v1.0.9...v1.0.10) (2026-10-04)
 
 * Change markdown editor styling
