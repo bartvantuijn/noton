@@ -36,13 +36,13 @@ services:
       AI_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
       OLLAMA_MODEL: llama3.1:8b
-      OLLAMA_TIMEOUT: 60
+      OLLAMA_TIMEOUT: 600
       OLLAMA_PULL_TIMEOUT: 600
       OLLAMA_KEEP_ALIVE: 1h
       OLLAMA_BEARER_TOKEN: ""
       OPENCLAW_BASE_URL: ""
       OPENCLAW_MODEL: openclaw/default
-      OPENCLAW_TIMEOUT: 60
+      OPENCLAW_TIMEOUT: 600
       OPENCLAW_BEARER_TOKEN: ""
     volumes:
       - ./noton-data/uploads:/srv/www/storage/app/public
@@ -212,7 +212,7 @@ Ollama is the default local AI provider.
 
 - `OLLAMA_BASE_URL`: Base URL of your Ollama instance.
 - `OLLAMA_MODEL`: Model name used by Noton.
-- `OLLAMA_TIMEOUT`: How long Noton waits for a model response (default: 60s).
+- `OLLAMA_TIMEOUT`: How long Noton waits for a model response (default: 10m).
 - `OLLAMA_PULL_TIMEOUT`: How long Noton waits when pulling a model (default: 10m).
 - `OLLAMA_KEEP_ALIVE`: How long Ollama keeps the model loaded (default: 1h).
 - `OLLAMA_BEARER_TOKEN`: Optional bearer token for Ollama.
@@ -231,7 +231,7 @@ Use `openclaw/default` as the model unless you want to target a different OpenCl
 
 - `OPENCLAW_BASE_URL`: Base URL of your OpenClaw Gateway including `/v1`.
 - `OPENCLAW_MODEL`: OpenClaw model or agent target, usually `openclaw/default`.
-- `OPENCLAW_TIMEOUT`: How long Noton waits for a response (default: 60s).
+- `OPENCLAW_TIMEOUT`: How long Noton waits for a response (default: 10m).
 - `OPENCLAW_BEARER_TOKEN`: Bearer token for your OpenClaw Gateway.
 
 ## Environment Variables

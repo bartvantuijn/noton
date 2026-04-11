@@ -42,7 +42,7 @@ return [
     'ollama' => [
         'base_url' => env('OLLAMA_BASE_URL', 'http://ollama:11434'),
         'model' => env('OLLAMA_MODEL', 'llama3.1:8b'),
-        'timeout' => (int) env('OLLAMA_TIMEOUT', 60),
+        'timeout' => (int) env('OLLAMA_TIMEOUT', 600),
         'pull_timeout' => (int) env('OLLAMA_PULL_TIMEOUT', 600),
         'keep_alive' => env('OLLAMA_KEEP_ALIVE', '1h'),
         'bearer_token' => env('OLLAMA_BEARER_TOKEN'),
@@ -51,7 +51,7 @@ return [
     'openclaw' => [
         'base_url' => env('OPENCLAW_BASE_URL'),
         'model' => env('OPENCLAW_MODEL', 'openclaw/default'),
-        'timeout' => (int) env('OPENCLAW_TIMEOUT', 60),
+        'timeout' => (int) env('OPENCLAW_TIMEOUT', 600),
         'bearer_token' => env('OPENCLAW_BEARER_TOKEN'),
     ],
 
