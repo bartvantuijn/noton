@@ -10,7 +10,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 
 class PostForm
 {
@@ -25,7 +29,14 @@ class PostForm
         return [
             TextInput::make('title')
                 ->label(__('Title'))
-                ->required(),
+                ->required()
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+            TextInput::make('slug')
+                ->label(__('Slug'))
+                ->required()
+                ->unique(ignoreRecord: true, modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('category_id', $get('category_id')))
+                ->afterStateHydrated(fn (Get $get, Set $set, ?string $state) => $set('slug', $state ?: Str::slug($get('title')))),
             Select::make('category_id')
                 ->label(__('Category'))
                 ->required()

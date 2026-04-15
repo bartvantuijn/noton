@@ -52,6 +52,23 @@ class AuthRedirectTest extends TestCase
             ->assertRedirect(route('filament.admin.auth.login'));
     }
 
+    public function test_authenticated_users_can_open_edit_pages(): void
+    {
+        $user = User::factory()->create();
+
+        $category = Category::factory()->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $post = Post::factory()->for($category)->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->actingAs($user)
+            ->get(PostResource::getUrl('edit', ['record' => $post]))
+            ->assertOk();
+    }
+
     public function test_guests_are_redirected_to_login_from_private_posts(): void
     {
         User::factory()->create();
@@ -72,7 +89,7 @@ class AuthRedirectTest extends TestCase
     {
         User::factory()->create();
 
-        $this->get(PostResource::getUrl('view', ['record' => 999]))
+        $this->get('/posts/view/missing-category/missing-post')
             ->assertRedirect('/');
     }
 }

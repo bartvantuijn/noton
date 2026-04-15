@@ -29,7 +29,6 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
@@ -116,10 +115,11 @@ class AdminPanelProvider extends PanelProvider
             ->get();
 
         $children = $categories->groupBy('parent_id');
+        $activeCategoryId = $this->getActiveCategoryId();
 
-        // Collect the currently-active category and its ancestors — this is the open branch.
+        // Collect the active category and its ancestors so we can keep the open branch expanded.
         $activeIds = collect();
-        $current = $categories->first(fn (Category $category) => $this->isCategoryActive($category));
+        $current = $categories->firstWhere('id', $activeCategoryId);
 
         while ($current) {
             $activeIds->push($current->id);
@@ -129,36 +129,36 @@ class AdminPanelProvider extends PanelProvider
         return $categories->whereNull('parent_id')
             ->map(fn (Category $category) => NavigationGroup::make($category->name)
                 ->icon(Heroicon::OutlinedFolder)
-                ->items($this->getCategoryNavigationItems($category, $children, $activeIds)))
+                ->items($this->getCategoryNavigationItems($category, $children, $activeIds, $activeCategoryId)))
             ->all();
     }
 
-    protected function getCategoryNavigationItems(Category $category, Collection $children, Collection $activeIds, int $depth = 0): array
+    protected function getCategoryNavigationItems(Category $category, Collection $children, Collection $activeIds, ?int $activeCategoryId, int $depth = 0): array
     {
         $items = collect();
 
         // Show nested categories on the root level and inside the open branch.
         if ($depth === 0 || $activeIds->contains($category->id)) {
             foreach ($children->get($category->id, collect()) as $child) {
-                $active = $activeIds->contains($child->id);
+                $onBranch = $activeIds->contains($child->id);
 
                 $items->push(
                     NavigationItem::make($child->name)
-                        ->badge($active ? '▾' : '▸', $active ? 'primary' : 'gray')
+                        ->badge($onBranch ? '▾' : '▸', $onBranch ? 'primary' : 'gray')
                         ->icon(Heroicon::OutlinedFolder)
                         ->url(CategoryResource::getUrl('view', ['record' => $child]))
-                        ->isActiveWhen(fn () => $this->isCategoryActive($child))
+                        ->isActiveWhen(fn () => $child->id === $activeCategoryId)
                 );
 
-                $items = $items->merge($this->getCategoryNavigationItems($child, $children, $activeIds, $depth + 1));
+                $items = $items->merge($this->getCategoryNavigationItems($child, $children, $activeIds, $activeCategoryId, $depth + 1));
             }
         }
 
         // Show posts on the root level and inside the active category.
-        if ($depth === 0 || $this->isCategoryActive($category)) {
+        if ($depth === 0 || $activeIds->contains($category->id)) {
             $items = $items->merge($category->posts->map(fn (Post $post) => NavigationItem::make($post->title)
-                ->url(route('filament.admin.resources.posts.view', ['record' => $post]))
-                ->isActiveWhen(fn () => request()->routeIs('filament.admin.resources.posts.view', 'filament.admin.resources.posts.edit') && $this->getCurrentRecordId() == $post->id)));
+                ->url(PostResource::getUrl('view', ['record' => $post]))
+                ->isActiveWhen(fn () => $this->isPostActive($post))));
 
             // Keep the quick create action on root categories.
             if ($depth === 0 && Gate::allows('create', Post::class)) {
@@ -173,25 +173,24 @@ class AdminPanelProvider extends PanelProvider
         return $items->all();
     }
 
-    protected function isCategoryActive(Category $category): bool
+    protected function getActiveCategoryId(): ?int
     {
-        $recordId = $this->getCurrentRecordId();
-
-        if (request()->routeIs('filament.admin.resources.categories.view', 'filament.admin.resources.categories.edit') && $recordId == $category->id) {
-            return true;
-        }
-
-        if (request()->routeIs('filament.admin.resources.posts.view', 'filament.admin.resources.posts.edit') && $category->posts->contains('id', $recordId)) {
-            return true;
-        }
-
-        return request()->routeIs('filament.admin.resources.posts.create') && request()->integer('category_id') === $category->id;
+        return match (true) {
+            request()->routeIs('filament.admin.resources.categories.view') => Category::findBySlugPath((string) request()->route('record'))?->id,
+            request()->routeIs('filament.admin.resources.categories.edit') => (int) request()->route('record') ?: null,
+            request()->routeIs('filament.admin.resources.posts.view') => Category::findBySlugPath((string) request()->route('category'))?->id,
+            request()->routeIs('filament.admin.resources.posts.edit') => Post::find(request()->route('record'))?->category_id,
+            request()->routeIs('filament.admin.resources.posts.create') => request()->integer('category_id') ?: null,
+            default => null,
+        };
     }
 
-    protected function getCurrentRecordId(): int | string | null
+    protected function isPostActive(Post $post): bool
     {
-        $record = request()->route('record');
-
-        return $record instanceof EloquentModel ? $record->getKey() : $record;
+        return match (true) {
+            request()->routeIs('filament.admin.resources.posts.view') => request()->route('record') === $post->getSlug() && request()->route('category') === $post->category->getSlugPath(),
+            request()->routeIs('filament.admin.resources.posts.edit') => (int) request()->route('record') === $post->getKey(),
+            default => false,
+        };
     }
 }

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\Visibility;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Category>
@@ -19,7 +20,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => ucwords(fake()->words(2, true)),
+            'name' => $name = ucwords(fake()->unique()->words(2, true)),
+            'slug' => Str::slug($name),
             'content' => implode("\n\n", [
                 '# ' . ucfirst(fake()->words(3, true)),
                 fake()->paragraph(),

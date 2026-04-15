@@ -13,6 +13,20 @@ class EditCategory extends EditRecord
 {
     protected static string $resource = CategoryResource::class;
 
+    public function getBreadcrumbs(): array
+    {
+        $breadcrumbs = [CategoryResource::getUrl() => CategoryResource::getBreadcrumb()];
+
+        foreach ($this->record->getAncestors() as $ancestor) {
+            $breadcrumbs[CategoryResource::getUrl('view', ['record' => $ancestor])] = $ancestor->name;
+        }
+
+        $breadcrumbs[CategoryResource::getUrl('view', ['record' => $this->record])] = $this->record->name;
+        $breadcrumbs[] = $this->getBreadcrumb();
+
+        return $breadcrumbs;
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('view', ['record' => $this->getRecord()]);

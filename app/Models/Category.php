@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Enums\Visibility;
 use App\Models\Scopes\VisibleScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 #[ScopedBy([VisibleScope::class])]
@@ -20,6 +22,8 @@ class Category extends Model
     protected static function booted(): void
     {
         static::saving(function (self $category): void {
+            $category->slug = Str::slug($category->slug ?: $category->name);
+            $category->validateSlug();
             $category->validateParent();
         });
     }
@@ -49,6 +53,37 @@ class Category extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug ?: Str::slug($this->name);
+    }
+
+    public function getSlugPath(): string
+    {
+        return $this->getAncestors()->push($this)->map->getSlug()->join('/');
+    }
+
+    public static function findBySlugPath(string $path, ?Builder $query = null): ?self
+    {
+        $query ??= static::query();
+        $category = null;
+
+        // Walk the path segment by segment, matching each slug against the current parent.
+        foreach (array_filter(explode('/', trim($path, '/'))) as $slug) {
+            $category = (clone $query)
+                ->where('parent_id', $category?->id)
+                ->where(fn (Builder $query) => $query->where('slug', $slug)->orWhereNull('slug'))
+                ->get()
+                ->first(fn (self $category) => $category->getSlug() === $slug);
+
+            if (! $category) {
+                return null;
+            }
+        }
+
+        return $category;
     }
 
     public function getSelectLabel(): string
@@ -112,6 +147,23 @@ class Category extends Model
         if ($parent?->getAncestors()->contains('id', $this->id)) {
             throw ValidationException::withMessages([
                 'parent_id' => __('A category cannot be nested inside its own child.'),
+            ]);
+        }
+    }
+
+    public function validateSlug(): void
+    {
+        $query = self::withoutGlobalScopes()
+            ->where('slug', $this->slug)
+            ->whereKeyNot($this->getKey());
+
+        $this->parent_id
+            ? $query->where('parent_id', $this->parent_id)
+            : $query->whereNull('parent_id');
+
+        if ($query->exists()) {
+            throw ValidationException::withMessages([
+                'slug' => __('The slug has already been taken.'),
             ]);
         }
     }

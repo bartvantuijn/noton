@@ -47,6 +47,11 @@ html.dark .phiki span {
     text-decoration-color: var(--prose-link-color);
 }
 
+#content a.fi-btn {
+    font-weight: inherit;
+    text-decoration: none;
+}
+
 #content hr {
     margin: 1rem 0;
 }

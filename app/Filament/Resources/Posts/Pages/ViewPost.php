@@ -27,15 +27,9 @@ class ViewPost extends ViewRecord
 
     public function getBreadcrumbs(): array
     {
-        $breadcrumbs = [
-            PostResource::getUrl() => PostResource::getBreadcrumb(),
-        ];
+        $breadcrumbs = [PostResource::getUrl() => PostResource::getBreadcrumb()];
 
-        if ($category = $this->record->category) {
-            foreach ($category->getAncestors() as $ancestor) {
-                $breadcrumbs[CategoryResource::getUrl('view', ['record' => $ancestor])] = $ancestor->name;
-            }
-
+        foreach ($this->record->category->getAncestors()->push($this->record->category) as $category) {
             $breadcrumbs[CategoryResource::getUrl('view', ['record' => $category])] = $category->name;
         }
 

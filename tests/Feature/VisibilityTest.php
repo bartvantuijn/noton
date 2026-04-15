@@ -24,13 +24,13 @@ class VisibilityTest extends TestCase
         ]);
 
         $post = Post::factory()->for($category)->create([
-            'title' => 'Public post',
+            'title' => 'Public Post',
             'visibility' => Visibility::Public,
         ]);
 
         $this->get(PostResource::getUrl('view', ['record' => $post]))
             ->assertOk()
-            ->assertSee('Public post');
+            ->assertSee('Public Post');
     }
 
     public function test_guests_are_redirected_from_private_posts(): void
@@ -113,6 +113,24 @@ class VisibilityTest extends TestCase
 
         $this->get(PostResource::getUrl('view', ['record' => $post]))
             ->assertRedirect(route('filament.admin.auth.login'));
+    }
+
+    public function test_guests_do_not_see_private_posts_on_category_pages(): void
+    {
+        User::factory()->create();
+
+        $category = Category::factory()->create([
+            'visibility' => Visibility::Public,
+        ]);
+
+        Post::factory()->for($category)->create([
+            'title' => 'Private Post',
+            'visibility' => Visibility::Private,
+        ]);
+
+        $this->get(CategoryResource::getUrl('view', ['record' => $category]))
+            ->assertOk()
+            ->assertDontSee('Private Post');
     }
 
     public function test_guest_queries_hide_public_items_inside_private_category_branches(): void

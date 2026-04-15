@@ -34,26 +34,35 @@ class RedirectToLogin
         }
 
         // Redirect from private category.
-        if ($request->routeIs('filament.admin.resources.categories.view')) {
-            $category = Category::withoutGlobalScopes()->find($request->route('record'));
-
-            if ($category?->isEffectivelyPrivate()) {
-                return $this->redirect();
-            }
+        if ($request->routeIs('filament.admin.resources.categories.view') && $this->findCategory($request->route('record'))?->isEffectivelyPrivate()) {
+            return $this->redirect();
         }
 
         // Redirect from private post.
-        if ($request->routeIs('filament.admin.resources.posts.view')) {
-            $post = Post::withoutGlobalScopes()
-                ->with(['category' => fn ($query) => $query->withoutGlobalScopes()])
-                ->find($request->route('record'));
-
-            if ($post?->isEffectivelyPrivate()) {
-                return $this->redirect();
-            }
+        if ($request->routeIs('filament.admin.resources.posts.view') && $this->findPost($request->route('category'), $request->route('record'))?->isEffectivelyPrivate()) {
+            return $this->redirect();
         }
 
         return $next($request);
+    }
+
+    protected function findCategory(string $slug): ?Category
+    {
+        return Category::findBySlugPath($slug, Category::withoutGlobalScopes());
+    }
+
+    protected function findPost(string $categorySlug, string $postSlug): ?Post
+    {
+        $category = $this->findCategory($categorySlug);
+
+        return $category
+            ? Post::withoutGlobalScopes()
+                ->with(['category' => fn ($query) => $query->withoutGlobalScopes()])
+                ->whereBelongsTo($category, 'category')
+                ->where(fn ($query) => $query->where('slug', $postSlug)->orWhereNull('slug'))
+                ->get()
+                ->first(fn (Post $post) => $post->getSlug() === $postSlug)
+            : null;
     }
 
     protected function redirect(): RedirectResponse

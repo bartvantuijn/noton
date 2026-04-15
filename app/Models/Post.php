@@ -23,6 +23,13 @@ class Post extends Model
     use HasFactory;
     use HasTags;
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $post): void {
+            $post->slug = Str::slug($post->slug ?: $post->title);
+        });
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -44,6 +51,11 @@ class Post extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug ?: Str::slug($this->title);
     }
 
     public function isEffectivelyPrivate(): bool

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\Visibility;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Post>
@@ -19,7 +20,8 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => ucfirst(fake()->words(3, true)),
+            'title' => $title = ucfirst(fake()->unique()->words(3, true)),
+            'slug' => Str::slug($title),
             'content' => implode("\n\n", [
                 '# ' . ucfirst(fake()->words(3, true)),
                 fake()->paragraph(),
