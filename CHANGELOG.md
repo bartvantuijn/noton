@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.13](https://github.com/bartvantuijn/noton/compare/v1.0.12...v1.0.13) (2026-15-04)
+
+* Fix category slug index migration
+* Add general improvements
+
 ## [1.0.12](https://github.com/bartvantuijn/noton/compare/v1.0.11...v1.0.12) (2026-15-04)
 
 * Change post and categories slug

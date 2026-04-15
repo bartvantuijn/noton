@@ -1,9 +1,17 @@
 # To-do
 
-- Update screenshots
-- Build URL's from name/title
-- Be able to hide categories/posts from sidebar
+- Fix `Deprecation Notice: Constant E_STRICT is deprecated in phar:///usr/bin/composer/src/Composer/Util/Silencer.php:36`
+- Sort subcategories and posts in info lists on sort
+- Add save button to top on edit pages
+- Improve quick actions
+- Add soft deletes to posts and categories
+- When you chat with Noton and the sentence becomes longer text needs to be wrapped
+- Add fake logo and favicon to DatabaseSeeder.php
 
+- Upgrade to Filament v5
+- Update screenshots
+
+- Be able to hide categories/posts from sidebar
 - Audit trail for categories/posts
 - Improve Ollama context retrieval when needed
 - Improve AI search quality when the documentation grows
