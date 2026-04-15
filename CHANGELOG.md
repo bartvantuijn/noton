@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.12](https://github.com/bartvantuijn/noton/compare/v1.0.11...v1.0.12) (2026-15-04)
+
+* Change post and categories slug
+* Add general improvements
+
 ## [1.0.11](https://github.com/bartvantuijn/noton/compare/v1.0.10...v1.0.11) (2026-11-04)
 
 * Increase AI provider chat timeouts
