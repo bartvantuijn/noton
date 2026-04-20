@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.14](https://github.com/bartvantuijn/noton/compare/v1.0.13...v1.0.14) (2026-20-04)
+
+* Improve content styling
+* Update Phiki
+* Override HTML sanitizer to allow inputs
+* Update Composer
+* Sort subcategories and posts in info lists
+* Add save button to headers
+* Add general improvements
+
 ## [1.0.13](https://github.com/bartvantuijn/noton/compare/v1.0.12...v1.0.13) (2026-15-04)
 
 * Fix category slug index migration

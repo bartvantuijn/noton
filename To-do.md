@@ -1,12 +1,11 @@
 # To-do
 
-- Fix `Deprecation Notice: Constant E_STRICT is deprecated in phar:///usr/bin/composer/src/Composer/Util/Silencer.php:36`
-- Sort subcategories and posts in info lists on sort
-- Add save button to top on edit pages
 - Improve quick actions
 - Add soft deletes to posts and categories
 - When you chat with Noton and the sentence becomes longer text needs to be wrapped
 - Add fake logo and favicon to DatabaseSeeder.php
+- Add back button and increase quick action button size
+- Be able to manage imported media
 
 - Upgrade to Filament v5
 - Update screenshots
