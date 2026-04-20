@@ -101,6 +101,7 @@ class CategoryResource extends Resource
                             ->icon(Heroicon::OutlinedFolder),
                         RepeatableEntry::make('children')
                             ->label(__('Subcategories'))
+                            ->state(fn (Category $record) => $record->children()->orderBy('sort')->get())
                             ->visible(fn (Category $record) => $record->children()->exists())
                             ->schema([
                                 TextEntry::make('name')
@@ -110,6 +111,7 @@ class CategoryResource extends Resource
                             ]),
                         RepeatableEntry::make('posts')
                             ->label(__('Posts'))
+                            ->state(fn (Category $record) => $record->posts()->orderBy('sort')->get())
                             ->visible(fn (Category $record) => $record->posts()->exists())
                             ->schema([
                                 TextEntry::make('title')
