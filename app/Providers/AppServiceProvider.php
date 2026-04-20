@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +36,26 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('colors.primary', function () {
             return Setting::singleton()->get('appearance.color') ?? '#3b82f6';
         });
+
+        // Override HTML sanitizer
+        $this->app->scoped(
+            HtmlSanitizerInterface::class,
+            fn (): HtmlSanitizer => new HtmlSanitizer(
+                (new HtmlSanitizerConfig)
+                    ->allowSafeElements()
+                    ->allowRelativeLinks()
+                    ->allowRelativeMedias()
+                    ->allowElement('input', ['type', 'checked']) // Allow inputs
+                    ->allowAttribute('class', allowedElements: '*')
+                    ->allowAttribute('data-color', allowedElements: '*')
+                    ->allowAttribute('data-from-breakpoint', allowedElements: '*')
+                    ->allowAttribute('data-type', allowedElements: '*')
+                    ->allowAttribute('style', allowedElements: '*')
+                    ->allowAttribute('width', allowedElements: 'img')
+                    ->allowAttribute('height', allowedElements: 'img')
+                    ->withMaxInputLength(500000),
+            ),
+        );
     }
 
     /**
