@@ -1,5 +1,5 @@
 @php
-    use Phiki\CommonMark\PhikiExtension;
+    use Phiki\Adapters\CommonMark\PhikiExtension;
 @endphp
 
 <div
