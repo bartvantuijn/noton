@@ -43,6 +43,10 @@ html.dark .phiki span {
 }
 
 /* Content styling */
+#content {
+    padding: 1px;
+}
+
 #content a {
     text-decoration-color: var(--prose-link-color);
 }
@@ -54,6 +58,10 @@ html.dark .phiki span {
 
 #content hr {
     margin: 1rem 0;
+}
+
+#content code {
+    color: var(--primary-400);
 }
 
 #content code:before,
