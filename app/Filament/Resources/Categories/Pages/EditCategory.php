@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Categories\Pages;
 
 use App\Filament\Resources\Categories\CategoryResource;
 use App\Models\Category;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -35,7 +36,9 @@ class EditCategory extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            $this->getSaveFormAction(),
+            Action::make('save')
+                ->label(__('Save changes'))
+                ->action('save'),
             DeleteAction::make(),
         ];
     }

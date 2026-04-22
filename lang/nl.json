@@ -42,6 +42,7 @@
     "A category cannot be nested inside its own child.": "Een categorie kan niet onder een eigen subcategorie hangen.",
     "The slug has already been taken.": "Deze slug is al in gebruik.",
     "There must be at least one admin.": "Er moet minstens één beheerder zijn.",
+    "Save changes": "Wijzigingen opslaan",
     "Settings saved successfully.": "Instellingen succesvol opgeslagen.",
     "Chat with Noton": "Chat met Noton",
     "Chat": "Chat",
