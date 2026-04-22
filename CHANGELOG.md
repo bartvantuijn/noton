@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.15](https://github.com/bartvantuijn/noton/compare/v1.0.14...v1.0.15) (2026-22-04)
+
+* Improve list styling
+* Fix save form header action
+* Add general improvements
+
 ## [1.0.14](https://github.com/bartvantuijn/noton/compare/v1.0.13...v1.0.14) (2026-20-04)
 
 * Improve content styling
