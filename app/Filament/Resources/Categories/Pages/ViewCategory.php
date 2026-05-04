@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Pages;
 
+use App\Filament\Actions\ImportFilesAction;
 use App\Filament\Resources\Categories\CategoryResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Models\Post;
@@ -17,6 +18,7 @@ class ViewCategory extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            ImportFilesAction::make($this->record),
             Action::make('create')
                 ->label(__('Create post'))
                 ->url(fn (): string => PostResource::getUrl('create', ['category_id' => $this->record->id]))
