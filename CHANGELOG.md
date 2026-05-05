@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.17](https://github.com/bartvantuijn/noton/compare/v1.0.16...v1.0.17) (2026-05-05)
+
+* Simplify sidebar categories
+* Add general improvements
+
 ## [1.0.16](https://github.com/bartvantuijn/noton/compare/v1.0.15...v1.0.16) (2026-05-05)
 
 * Add file import for posts (#12)
