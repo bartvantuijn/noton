@@ -1,4 +1,9 @@
 {
+    "Import files": "Bestanden importeren",
+    "Import complete": "Import voltooid",
+    ":count post(s) imported.": ":count bericht(en) geïmporteerd.",
+    ".zip or .md files only.": "Alleen .zip- of .md-bestanden.",
+    "Files": "Bestanden",
     "Admin": "Beheerder",
     "Categories": "Categorieën",
     "Category": "Categorie",
