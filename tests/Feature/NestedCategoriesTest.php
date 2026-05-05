@@ -267,7 +267,7 @@ class NestedCategoriesTest extends TestCase
         $this->assertSame(url('/categories/view/parent/child'), CategoryResource::getUrl('view', ['record' => $nestedChild]));
     }
 
-    public function test_sidebar_opens_the_active_nested_branch_for_posts(): void
+    public function test_sidebar_only_shows_direct_root_items(): void
     {
         $user = User::factory()->create();
 
@@ -298,15 +298,21 @@ class NestedCategoriesTest extends TestCase
             'slug' => 'second-post',
         ]);
 
+        Post::factory()->for($parent)->create([
+            'title' => 'Root Post',
+            'slug' => 'root-post',
+        ]);
+
         Category::factory()->create([
             'name' => 'Child',
             'slug' => 'child',
         ]);
 
-        $this->actingAs($user)
-            ->get(PostResource::getUrl('view', ['record' => $selectedPost]))
+        $this->actingAs($user);
+        $this->get(PostResource::getUrl('view', ['record' => $selectedPost]))
             ->assertOk()
-            ->assertSee('Grandchild')
-            ->assertSee('Second Post');
+            ->assertSee('Root Post')
+            ->assertDontSee('Grandchild')
+            ->assertDontSee('Second Post');
     }
 }

@@ -78,17 +78,6 @@ html.dark .phiki span {
     content: "";
 }
 
-/* Sidebar badges */
-.fi-sidebar-item .fi-badge {
-    min-width: 1.75rem;
-    padding-inline: 0.25rem;
-}
-
-.fi-sidebar-item .fi-badge .fi-badge-label {
-    font-size: calc(var(--spacing) * 5);
-    line-height: 1;
-}
-
 /* Settings navigation repeater */
 .settings-navigation-repeater .fi-fo-repeater-item-content {
     border-top: 0;

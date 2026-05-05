@@ -114,60 +114,40 @@ class AdminPanelProvider extends PanelProvider
             ->orderBy('sort')
             ->get();
 
-        $children = $categories->groupBy('parent_id');
-        $activeCategoryId = $this->getActiveCategoryId();
+        $groupedCategories = $categories->groupBy('parent_id');
 
-        // Collect the active category and its ancestors so we can keep the open branch expanded.
-        $activeIds = collect();
-        $current = $categories->firstWhere('id', $activeCategoryId);
-
-        while ($current) {
-            $activeIds->push($current->id);
-            $current = $categories->firstWhere('id', $current->parent_id);
-        }
-
-        return $categories->whereNull('parent_id')
+        // Only root categories become sidebar groups.
+        return $categories
+            ->whereNull('parent_id')
             ->map(fn (Category $category) => NavigationGroup::make($category->name)
                 ->icon(Heroicon::OutlinedFolder)
-                ->items($this->getCategoryNavigationItems($category, $children, $activeIds, $activeCategoryId)))
+                ->items($this->getCategoryNavigationItems($category, $groupedCategories)))
             ->all();
     }
 
-    protected function getCategoryNavigationItems(Category $category, Collection $children, Collection $activeIds, ?int $activeCategoryId, int $depth = 0): array
+    protected function getCategoryNavigationItems(Category $category, Collection $categories): array
     {
-        $items = collect();
+        $activeCategoryId = $this->getActiveCategoryId();
 
-        // Show nested categories on the root level and inside the open branch.
-        if ($depth === 0 || $activeIds->contains($category->id)) {
-            foreach ($children->get($category->id, collect()) as $child) {
-                $onBranch = $activeIds->contains($child->id);
+        // Show direct child categories.
+        $items = $categories->get($category->id, collect())->map(fn (Category $child) => NavigationItem::make($child->name)
+            ->badge(__('Category'), 'gray')
+            ->icon(Heroicon::OutlinedFolder)
+            ->url(CategoryResource::getUrl('view', ['record' => $child]))
+            ->isActiveWhen(fn () => $child->id === $activeCategoryId));
 
-                $items->push(
-                    NavigationItem::make($child->name)
-                        ->badge($onBranch ? '▾' : '▸', $onBranch ? 'primary' : 'gray')
-                        ->icon(Heroicon::OutlinedFolder)
-                        ->url(CategoryResource::getUrl('view', ['record' => $child]))
-                        ->isActiveWhen(fn () => $child->id === $activeCategoryId)
-                );
+        // Show posts directly under the root category.
+        $items = $items->merge($category->posts->map(fn (Post $post) => NavigationItem::make($post->title)
+            ->url(PostResource::getUrl('view', ['record' => $post]))
+            ->isActiveWhen(fn () => $this->isPostActive($post))));
 
-                $items = $items->merge($this->getCategoryNavigationItems($child, $children, $activeIds, $activeCategoryId, $depth + 1));
-            }
-        }
-
-        // Show posts on the root level and inside the active category.
-        if ($depth === 0 || $activeIds->contains($category->id)) {
-            $items = $items->merge($category->posts->map(fn (Post $post) => NavigationItem::make($post->title)
-                ->url(PostResource::getUrl('view', ['record' => $post]))
-                ->isActiveWhen(fn () => $this->isPostActive($post))));
-
-            // Keep the quick create action on root categories.
-            if ($depth === 0 && Gate::allows('create', Post::class)) {
-                $items->push(
-                    NavigationItem::make(__('Create post'))
-                        ->badge('+')
-                        ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
-                );
-            }
+        // Keep the quick create action on root categories.
+        if (Gate::allows('create', Post::class)) {
+            $items->push(
+                NavigationItem::make(__('Create post'))
+                    ->badge('+')
+                    ->url(route('filament.admin.resources.posts.create', ['category_id' => $category->id]))
+            );
         }
 
         return $items->all();
