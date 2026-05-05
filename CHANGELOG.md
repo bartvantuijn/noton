@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.16](https://github.com/bartvantuijn/noton/compare/v1.0.15...v1.0.16) (2026-05-05)
+
+* Add file import for posts (#11)
+* Add general improvements
+
 ## [1.0.15](https://github.com/bartvantuijn/noton/compare/v1.0.14...v1.0.15) (2026-22-04)
 
 * Improve list styling

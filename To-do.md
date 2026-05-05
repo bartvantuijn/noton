@@ -10,6 +10,7 @@
 - Upgrade to Filament v5
 - Update screenshots
 
+- Add export functionality
 - Be able to hide categories/posts from sidebar
 - Audit trail for categories/posts
 - Improve Ollama context retrieval when needed
