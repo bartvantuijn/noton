@@ -1,0 +1,57 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in Noton.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. The information below helps us reproduce and fix it faster.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: A clear, concise description of the bug.
+      placeholder: When I click "Save" on a draft post, the page reloads but the post is not saved.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What you expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Numbered list of steps that trigger the bug.
+      placeholder: |
+        1. Log in as an admin
+        2. Go to Posts -> New
+        3. Fill in the title only
+        4. Click "Save"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Noton version, Docker image tag, `git rev-parse HEAD` if self-built.
+        PHP version, database (PostgreSQL/MySQL/SQLite), OS.
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Paste any `storage/logs/laravel.log` lines, browser console output, or container logs.
+    validations:
+      required: false

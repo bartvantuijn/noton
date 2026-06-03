@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/bartvantuijn/noton/blob/main/docs/setup.md
+    about: Setup guide and feature reference.
+  - name: Discussions
+    url: https://github.com/bartvantuijn/noton/discussions
+    about: Questions, ideas, and community support.

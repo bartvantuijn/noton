@@ -1,0 +1,41 @@
+name: Feature Request
+description: Suggest a new feature for Noton.
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests should describe a concrete use case. Open-ended "wouldn't it be cool if…" is best discussed on the Discussions tab.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve? Who else hits it?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like this to work? Mock-ups, sketches, or references welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you have ruled out and why.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that helps frame the request.
+    validations:
+      required: false
