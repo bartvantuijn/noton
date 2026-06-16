@@ -30,7 +30,9 @@ class PinnedItems extends Widget
                 ->whereBelongsTo(Auth::user())
                 ->latest()
                 ->get()
-                ->filter(fn (Pin $pin) => $pin->pinnable),
+                ->filter(fn (Pin $pin) => $pin->pinnable)
+                ->sortByDesc(fn (Pin $pin) => $pin->pinnable->views)
+                ->values(),
         ];
     }
 }

@@ -46,6 +46,10 @@ class PinnedItemsTest extends TestCase
 
         $this->actingAs($user);
 
+        $pins = app(PinnedItems::class)->getViewData()['pins'];
+
+        $this->assertTrue($pins->first()->pinnable->is($category));
+
         Livewire::test(PinnedItems::class)
             ->assertSeeText('Pinned')
             ->assertSeeText('Hosting')
