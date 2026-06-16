@@ -14,6 +14,7 @@ use App\Models\Post;
 use BackedEnum;
 use Closure;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\SpatieTagsEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Panel;
 use Filament\Resources\Resource;
@@ -95,6 +96,9 @@ class CategoryResource extends Resource
                     ->description(fn (Category $record) => $record->subtitle)
                     ->afterHeader(fn (Category $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
+                        SpatieTagsEntry::make('tags')
+                            ->hiddenLabel()
+                            ->visible(fn (Category $category) => $category->tags()->exists()),
                         TextEntry::make('parent.name')
                             ->label(__('Parent'))
                             ->visible(fn (Category $record) => filled($record->parent_id))

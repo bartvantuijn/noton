@@ -6,6 +6,7 @@ use App\Enums\Visibility;
 use App\Models\Category;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Utilities\Get;
@@ -48,6 +49,9 @@ class CategoryForm
                 ->default(Visibility::Public)
                 ->options(Visibility::class)
                 ->grouped(),
+            SpatieTagsInput::make('tags')
+                ->reorderable()
+                ->columnSpan('full'),
             MarkdownEditor::make('content')
                 ->columnSpanFull(),
         ];

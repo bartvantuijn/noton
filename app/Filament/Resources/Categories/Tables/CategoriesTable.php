@@ -10,6 +10,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class CategoriesTable
@@ -30,12 +31,21 @@ class CategoriesTable
                     ->label(__('Posts'))
                     ->badge()
                     ->counts('posts'),
+                TextColumn::make('tags.name')
+                    ->label(__('Tags'))
+                    ->searchable()
+                    ->badge(),
                 TextColumn::make('visibility')
                     ->label(__('Visibility'))
                     ->badge(),
             ])
             ->filters([
-                //
+                SelectFilter::make('tags')
+                    ->label(__('Tags'))
+                    ->searchable()
+                    ->preload()
+                    ->multiple()
+                    ->relationship('tags', 'name'),
             ])
             ->recordActions([
                 ViewAction::make()

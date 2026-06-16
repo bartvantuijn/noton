@@ -12,7 +12,12 @@ class Tag extends BaseTag
     #[Scope]
     protected function mostUsed(Builder $query, int $limit = 1): void
     {
-        $query->withCount('posts')->orderBy('posts_count', 'desc')->take($limit);
+        $query->withCount(['posts', 'categories'])->orderByRaw('posts_count + categories_count desc')->take($limit);
+    }
+
+    public function categories(): MorphToMany
+    {
+        return $this->morphedByMany(Category::class, 'taggable');
     }
 
     public function posts(): MorphToMany

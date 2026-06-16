@@ -50,9 +50,15 @@ class DatabaseSeeder extends Seeder
                             ->afterCreating(function (Post $post) use ($tags) {
                                 $post->attachTags($tags->random(3));
                             })
-                    ),
+                    )
+                    ->afterCreating(function (Category $category) use ($tags) {
+                        $category->attachTags($tags->random(3));
+                    }),
                 'children'
             )
+            ->afterCreating(function (Category $category) use ($tags) {
+                $category->attachTags($tags->random(3));
+            })
             ->createQuietly();
     }
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\Visibility;
 use App\Models\Scopes\VisibleScope;
+use App\Observers\CategoryObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,11 +16,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Tags\HasTags;
 
+#[ObservedBy([CategoryObserver::class])]
 #[ScopedBy([VisibleScope::class])]
 class Category extends Model
 {
     use HasFactory;
+    use HasTags;
 
     protected static function booted(): void
     {
