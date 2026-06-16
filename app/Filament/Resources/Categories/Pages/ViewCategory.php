@@ -18,6 +18,13 @@ class ViewCategory extends ViewRecord
 {
     protected static string $resource = CategoryResource::class;
 
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+
+        $this->record->increment('views');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

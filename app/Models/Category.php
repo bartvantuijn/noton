@@ -6,6 +6,7 @@ use App\Enums\Visibility;
 use App\Models\Scopes\VisibleScope;
 use App\Observers\CategoryObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -44,6 +45,12 @@ class Category extends Model
         return [
             'visibility' => Visibility::class,
         ];
+    }
+
+    #[Scope]
+    protected function mostViewed(Builder $query, int $limit = 1): void
+    {
+        $query->orderBy('views', 'desc')->take($limit);
     }
 
     public function parent(): BelongsTo

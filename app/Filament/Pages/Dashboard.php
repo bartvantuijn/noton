@@ -3,7 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\MostUsedTags;
-use App\Filament\Widgets\MostViewedPosts;
+use App\Filament\Widgets\MostViewed;
 use App\Filament\Widgets\NotonWidget;
 use App\Filament\Widgets\PinnedItems;
 use App\Filament\Widgets\StatsOverview;
@@ -35,7 +35,7 @@ class Dashboard extends BaseDashboard
             NotonWidget::class,
             StatsOverview::class,
             MostUsedTags::class,
-            MostViewedPosts::class,
+            MostViewed::class,
         ];
     }
 }
