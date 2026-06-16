@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Filament\Widgets\MostUsedTags;
 use App\Filament\Widgets\MostViewedPosts;
 use App\Filament\Widgets\NotonWidget;
+use App\Filament\Widgets\PinnedItems;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Pages\Dashboard as BaseDashboard;
 
@@ -30,6 +31,7 @@ class Dashboard extends BaseDashboard
     public function getHeaderWidgets(): array
     {
         return [
+            PinnedItems::class,
             NotonWidget::class,
             StatsOverview::class,
             MostUsedTags::class,
