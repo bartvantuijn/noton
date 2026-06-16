@@ -11,13 +11,14 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class PinnedItemsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_authenticated_users_see_their_pinned_items_on_the_dashboard(): void
+    public function test_authenticated_users_see_their_pinned_items(): void
     {
         $user = User::factory()->create();
 
@@ -43,9 +44,9 @@ class PinnedItemsTest extends TestCase
         Pin::create(['user_id' => $user->id, 'pinnable_type' => $category->getMorphClass(), 'pinnable_id' => $category->id]);
         Pin::create(['user_id' => $user->id, 'pinnable_type' => $post->getMorphClass(), 'pinnable_id' => $post->id]);
 
-        $this->actingAs($user)
-            ->get('/')
-            ->assertOk()
+        $this->actingAs($user);
+
+        Livewire::test(PinnedItems::class)
             ->assertSeeText('Pinned')
             ->assertSeeText('Hosting')
             ->assertSeeText(Str::limit($categorySubtitle, 20))

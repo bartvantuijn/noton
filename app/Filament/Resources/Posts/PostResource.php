@@ -20,6 +20,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\ResourceConfiguration;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
@@ -127,6 +128,12 @@ class PostResource extends Resource
                             ->badge()
                             ->color('gray')
                             ->icon(Heroicon::OutlinedEye),
+                        TextEntry::make('updated_at')
+                            ->hiddenLabel()
+                            ->color('gray')
+                            ->dateTime()
+                            ->icon(Heroicon::OutlinedClock)
+                            ->size(TextSize::ExtraSmall),
                     ])->columnSpanFull(),
             ]);
     }

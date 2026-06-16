@@ -133,6 +133,29 @@ class NestedCategoriesTest extends TestCase
         $this->assertSame(url('/categories/view/category'), CategoryResource::getUrl('view', ['record' => $category]));
     }
 
+    public function test_category_view_increments_views_without_touching_updated_at(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $updatedAt = now()->subDay()->startOfSecond();
+
+        $category = Category::factory()->create([
+            'name' => 'Category',
+            'slug' => 'category',
+            'updated_at' => $updatedAt,
+            'views' => 0,
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->get(CategoryResource::getUrl('view', ['record' => $category]))
+            ->assertOk();
+
+        $category->refresh();
+
+        $this->assertSame(1, $category->views);
+        $this->assertSame($updatedAt->toDateTimeString(), $category->updated_at->toDateTimeString());
+    }
+
     public function test_category_edit_uses_the_record_id(): void
     {
         $category = Category::factory()->create([
@@ -169,6 +192,30 @@ class NestedCategoriesTest extends TestCase
             url('/posts/view/category/post'),
             PostResource::getUrl('view', ['record' => $post]),
         );
+    }
+
+    public function test_post_view_increments_views_without_touching_updated_at(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $updatedAt = now()->subDay()->startOfSecond();
+        $category = Category::factory()->create(['name' => 'Category', 'slug' => 'category', 'visibility' => Visibility::Public]);
+
+        $post = Post::factory()->for($category)->create([
+            'title' => 'Post',
+            'slug' => 'post',
+            'updated_at' => $updatedAt,
+            'views' => 0,
+            'visibility' => Visibility::Public,
+        ]);
+
+        $this->get(PostResource::getUrl('view', ['record' => $post]))
+            ->assertOk();
+
+        $post->refresh();
+
+        $this->assertSame(1, $post->views);
+        $this->assertSame($updatedAt->toDateTimeString(), $post->updated_at->toDateTimeString());
     }
 
     public function test_post_edit_uses_the_record_id(): void

@@ -22,7 +22,7 @@ class ViewCategory extends ViewRecord
     {
         parent::mount($record);
 
-        $this->record->increment('views');
+        $this->record::withoutTimestamps(fn () => $this->record->increment('views'));
     }
 
     protected function getHeaderActions(): array
@@ -41,7 +41,7 @@ class ViewCategory extends ViewRecord
                     $pin->exists() ? $pin->delete() : Pin::create([
                         'user_id' => Auth::id(),
                         'pinnable_type' => $this->record->getMorphClass(),
-                        'pinnable_id' => $this->record->id
+                        'pinnable_id' => $this->record->id,
                     ]);
                 })
                 ->visible(fn (): bool => Auth::check()),

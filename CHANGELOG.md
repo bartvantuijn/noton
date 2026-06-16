@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.18](https://github.com/bartvantuijn/noton/compare/v1.0.17...v1.0.18) (2026-16-06)
+
+* Add subtitles to categories and posts
+* Add tags to categories
+* Add pinned items
+* Show most viewed content
+* Add general improvements
+
 ## [1.0.17](https://github.com/bartvantuijn/noton/compare/v1.0.16...v1.0.17) (2026-05-05)
 
 * Simplify sidebar categories

@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\Enums\Visibility;
+use App\Filament\Widgets\MostViewed;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class MostViewedItemsTest extends TestCase
@@ -34,9 +36,9 @@ class MostViewedItemsTest extends TestCase
 
         $category->attachTag(Tag::factory()->create(['name' => 'Servers']));
 
-        $this->actingAs($user)
-            ->get('/')
-            ->assertOk()
+        $this->actingAs($user);
+
+        Livewire::test(MostViewed::class)
             ->assertSeeText('Most viewed')
             ->assertSeeText('Hosting category')
             ->assertSeeText('Servers')
