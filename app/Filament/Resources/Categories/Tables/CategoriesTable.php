@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Categories\Tables;
 
 use App\Filament\Resources\Categories\CategoryResource;
+use App\Models\Category;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -19,7 +20,8 @@ class CategoriesTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable(),
+                    ->searchable()
+                    ->description(fn (Category $category): string => $category->summary(50)),
                 TextColumn::make('parent.name')
                     ->label(__('Parent'))
                     ->badge()

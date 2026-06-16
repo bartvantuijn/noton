@@ -22,6 +22,7 @@ class PostFactory extends Factory
         return [
             'title' => $title = ucfirst(fake()->unique()->words(3, true)),
             'slug' => Str::slug($title),
+            'subtitle' => fake()->sentence(),
             'content' => implode("\n\n", [
                 '# ' . ucfirst(fake()->words(3, true)),
                 fake()->paragraph(),

@@ -27,12 +27,14 @@ class ChatModalTest extends TestCase
 
         Post::factory()->for($category)->create([
             'title' => 'Database connection',
+            'subtitle' => 'Database host settings',
             'content' => 'Set DB_HOST to postgres and DB_PORT to 5432.',
             'visibility' => Visibility::Public,
         ]);
 
         Post::factory()->for($category)->create([
             'title' => 'Queue workers',
+            'subtitle' => 'Background job commands',
             'content' => 'Use php artisan queue:listen to process jobs.',
             'visibility' => Visibility::Public,
         ]);
@@ -64,6 +66,7 @@ class ChatModalTest extends TestCase
             ->first(fn (string $content) => str_starts_with($content, 'RELEVANT DOCUMENTATION:')) ?? '';
 
         $this->assertStringContainsString('Database connection', $context);
+        $this->assertStringContainsString('Database host settings', $context);
         $this->assertStringContainsString('DB_HOST to postgres', $context);
         $this->assertStringNotContainsString('Queue workers', $context);
     }
@@ -77,6 +80,7 @@ class ChatModalTest extends TestCase
 
         Post::factory()->for($privateCategory)->create([
             'title' => 'Internal API key',
+            'subtitle' => 'Sensitive credentials',
             'content' => 'The internal API key is secret-key-123.',
             'visibility' => Visibility::Private,
         ]);
@@ -115,6 +119,7 @@ class ChatModalTest extends TestCase
 
         Post::factory()->for($category)->create([
             'title' => 'Queue workers',
+            'subtitle' => 'Background job commands',
             'content' => 'Use php artisan queue:listen to process jobs.',
             'visibility' => Visibility::Public,
         ]);
@@ -153,6 +158,7 @@ class ChatModalTest extends TestCase
 
         Post::factory()->for($category)->create([
             'title' => 'Database connection',
+            'subtitle' => 'Database host settings',
             'content' => 'Set DB_HOST to postgres and DB_PORT to 5432.',
             'visibility' => Visibility::Public,
         ]);

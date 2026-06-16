@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -128,6 +129,18 @@ class Category extends Model
     public function isEffectivelyPrivate(): bool
     {
         return $this->visibility === Visibility::Private || $this->getAncestors()->contains(fn (self $category) => $category->visibility === Visibility::Private);
+    }
+
+    public function summary(int $length = 150): HtmlString
+    {
+        // Parse markdown and strip HTML for dashboard previews.
+        $content = html_entity_decode(strip_tags(Str::markdown($this->content ?? '')));
+
+        if (mb_strlen($content) > $length) {
+            $content = mb_substr($content, 0, $length) . '…';
+        }
+
+        return new HtmlString($content);
     }
 
     public function validateParent(): void

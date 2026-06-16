@@ -22,6 +22,7 @@ class CategoryFactory extends Factory
         return [
             'name' => $name = ucwords(fake()->unique()->words(2, true)),
             'slug' => Str::slug($name),
+            'subtitle' => fake()->sentence(),
             'content' => implode("\n\n", [
                 '# ' . ucfirst(fake()->words(3, true)),
                 fake()->paragraph(),

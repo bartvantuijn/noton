@@ -48,7 +48,7 @@ class PostResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title', 'content'];
+        return ['title', 'subtitle', 'content'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string
@@ -106,6 +106,7 @@ class PostResource extends Resource
             ->components([
                 Section::make()
                     ->heading(fn (Post $record) => $record->title)
+                    ->description(fn (Post $record) => $record->subtitle)
                     ->afterHeader(fn (Post $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
                         SpatieTagsEntry::make('tags')

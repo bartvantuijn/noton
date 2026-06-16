@@ -37,6 +37,8 @@ class PostForm
                 ->required()
                 ->unique(ignoreRecord: true, modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('category_id', $get('category_id')))
                 ->afterStateHydrated(fn (Get $get, Set $set, ?string $state) => $set('slug', $state ?: Str::slug($get('title')))),
+            TextInput::make('subtitle')
+                ->label(__('Subtitle')),
             Select::make('category_id')
                 ->label(__('Category'))
                 ->required()

@@ -47,7 +47,7 @@ class CategoryResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'content'];
+        return ['name', 'subtitle', 'content'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string
@@ -92,6 +92,7 @@ class CategoryResource extends Resource
             ->components([
                 Section::make()
                     ->heading(fn (Category $record) => $record->name)
+                    ->description(fn (Category $record) => $record->subtitle)
                     ->afterHeader(fn (Category $record): View => view('filament.components.badge', ['value' => $record->visibility]))
                     ->schema([
                         TextEntry::make('parent.name')
@@ -107,7 +108,8 @@ class CategoryResource extends Resource
                                 TextEntry::make('name')
                                     ->hiddenLabel()
                                     ->url(fn (Category $category) => static::getUrl('view', ['record' => $category]))
-                                    ->icon(Heroicon::OutlinedFolder),
+                                    ->icon(Heroicon::OutlinedFolder)
+                                    ->helperText(fn (Category $category) => $category->subtitle),
                             ]),
                         RepeatableEntry::make('posts')
                             ->label(__('Posts'))
@@ -117,7 +119,8 @@ class CategoryResource extends Resource
                                 TextEntry::make('title')
                                     ->hiddenLabel()
                                     ->url(fn (Post $post) => PostResource::getUrl('view', ['record' => $post]))
-                                    ->icon(Heroicon::OutlinedDocumentText),
+                                    ->icon(Heroicon::OutlinedDocumentText)
+                                    ->helperText(fn (Post $post) => $post->subtitle),
                             ]),
                         TextEntry::make('content')
                             ->hiddenLabel()

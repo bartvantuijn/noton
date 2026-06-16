@@ -35,6 +35,8 @@ class CategoryForm
                 ->required()
                 ->unique(ignoreRecord: true, modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('parent_id', $get('parent_id')))
                 ->afterStateHydrated(fn (Get $get, Set $set, ?string $state) => $set('slug', $state ?: Str::slug($get('name')))),
+            TextInput::make('subtitle')
+                ->label(__('Subtitle')),
             Select::make('parent_id')
                 ->label(__('Parent'))
                 ->options(fn (): array => Category::getSelectOptions())

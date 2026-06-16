@@ -64,11 +64,11 @@ class ChatModal extends Component
 
         // Score matching posts.
         return Post::query()
-            ->select(['id', 'category_id', 'title', 'content'])
+            ->select(['id', 'category_id', 'title', 'subtitle', 'content'])
             ->with('category')
             ->get()
             ->map(function (Post $post) use ($terms) {
-                $haystack = mb_strtolower($post->title . ' ' . $post->content);
+                $haystack = mb_strtolower($post->title . ' ' . $post->subtitle . ' ' . $post->content);
 
                 $score = $terms->reduce(function (int $carry, string $term) use ($haystack) {
                     return $carry + substr_count($haystack, $term);
@@ -96,6 +96,7 @@ class ChatModal extends Component
             return implode("\n", [
                 'POST_START',
                 'title: ' . $post->title,
+                'subtitle: ' . $post->subtitle,
                 'category: ' . $post->category->name,
                 'content:',
                 Str::limit((string) $post->content, 2500),
