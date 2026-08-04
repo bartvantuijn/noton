@@ -36,6 +36,15 @@ class AuthRedirectTest extends TestCase
             ->assertOk();
     }
 
+    public function test_github_star_button_is_visible(): void
+    {
+        User::factory()->create();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('https://github.com/bartvantuijn/noton');
+    }
+
     public function test_guests_are_redirected_to_login_from_edit_pages(): void
     {
         User::factory()->create();

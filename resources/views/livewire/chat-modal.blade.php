@@ -3,6 +3,7 @@
 @endphp
 
 <div
+    class="hidden md:block"
     x-data="{
         prompt: '',
         pendingPrompt: '',

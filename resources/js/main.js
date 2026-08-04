@@ -43,6 +43,9 @@ function enhanceCodeSnippets() {
 $(document).ready(function () {
     console.log('jQuery is ready!');
 
+    // Get GitHub stars
+    $.getJSON('https://api.github.com/repos/bartvantuijn/noton', repository => $('[data-github-stars]').text(repository.stargazers_count));
+
     // Highlight search query
     $(function () {
         const highlight = new URLSearchParams(window.location.search).get('query');
