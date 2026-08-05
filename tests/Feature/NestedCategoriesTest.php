@@ -362,4 +362,15 @@ class NestedCategoriesTest extends TestCase
             ->assertDontSee('Grandchild')
             ->assertDontSee('Second Post');
     }
+
+    public function test_sidebar_root_categories_link_to_their_page(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $category = Category::factory()->create();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee(CategoryResource::getUrl('view', ['record' => $category]));
+    }
 }

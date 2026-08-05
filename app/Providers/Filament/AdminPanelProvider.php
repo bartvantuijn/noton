@@ -121,6 +121,7 @@ class AdminPanelProvider extends PanelProvider
             ->whereNull('parent_id')
             ->map(fn (Category $category) => NavigationGroup::make($category->name)
                 ->icon(Heroicon::OutlinedFolder)
+                ->extraSidebarAttributes(['data-url' => CategoryResource::getUrl('view', ['record' => $category])])
                 ->items($this->getCategoryNavigationItems($category, $groupedCategories)))
             ->all();
     }

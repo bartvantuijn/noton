@@ -92,6 +92,34 @@ class AppServiceProvider extends ServiceProvider
             '),
         );
 
+        // Remember sidebar position
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIDEBAR_NAV_END,
+            fn (): string => Blade::render('
+            <script>
+                (() => {
+                    const sidebar = document.currentScript.parentElement;
+                    const scrollPosition = sessionStorage.getItem("sidebar-scroll-position");
+                    const restorePosition = () => requestAnimationFrame(() => {
+                        sidebar.scrollTop = scrollPosition;
+                        sidebar.style.removeProperty("visibility");
+                        sidebar.addEventListener("click", () => sessionStorage.setItem("sidebar-scroll-position", sidebar.scrollTop), true);
+                    });
+
+                    if (scrollPosition) {
+                        sidebar.style.visibility = "hidden";
+                    }
+
+                    if (document.readyState !== "complete") {
+                        window.addEventListener("load", restorePosition);
+                    } else {
+                        restorePosition();
+                    }
+                })();
+            </script>
+            '),
+        );
+
         // Register login render hook
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_AFTER,

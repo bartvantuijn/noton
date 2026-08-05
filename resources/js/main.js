@@ -46,6 +46,16 @@ $(document).ready(function () {
     // Get GitHub stars
     $.getJSON('https://api.github.com/repos/bartvantuijn/noton', repository => $('[data-github-stars]').text(repository.stargazers_count));
 
+    // Link root categories
+    $('.fi-sidebar-group[data-url]').each(function () {
+        const group = $(this);
+        const label = group.find('.fi-sidebar-group-label').first();
+        const content = label.prev('.fi-icon').addBack();
+
+        content.wrapAll($('<a>', {class: 'flex flex-1 items-center gap-x-3', href: group.data('url')}));
+        content.parent().on('click', event => event.stopPropagation());
+    });
+
     // Highlight search query
     $(function () {
         const highlight = new URLSearchParams(window.location.search).get('query');
