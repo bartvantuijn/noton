@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.19](https://github.com/bartvantuijn/noton/compare/v1.0.18...v1.0.19) (2026-05-08)
+
+* Add GitHub star button
+* Remember sidebar position and link categories
+* Add general improvements
+
 ## [1.0.18](https://github.com/bartvantuijn/noton/compare/v1.0.17...v1.0.18) (2026-16-06)
 
 * Add subtitles to categories and posts
