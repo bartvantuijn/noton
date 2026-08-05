@@ -27,7 +27,7 @@ COPY --from=composer_build /srv/www/vendor/filament vendor/filament
 
 # Install Node dependencies
 COPY package.json package-lock.json ./
-RUN npm install && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
 # Compile assets
 COPY vite.config.js ./
@@ -47,8 +47,9 @@ RUN set -eux; \
     mkdir -p /srv/www; chown noton:noton /srv/www
 
 # Install extensions
-RUN apt-get update; apt-get install --no-install-recommends -y \
-    acl gosu ssh git nano netcat-traditional libpq-dev libicu-dev libzip-dev caddy supervisor
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    acl gosu ssh git nano netcat-traditional libpq-dev libicu-dev libzip-dev caddy supervisor \
+    && rm -rf /var/lib/apt/lists/*
 
 # Enable extensions
 RUN docker-php-ext-install bcmath pdo_mysql pdo_pgsql intl exif zip
