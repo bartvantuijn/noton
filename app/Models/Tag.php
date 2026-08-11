@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\DB;
 use Spatie\Tags\Tag as BaseTag;
 
 class Tag extends BaseTag
@@ -12,7 +13,11 @@ class Tag extends BaseTag
     #[Scope]
     protected function mostUsed(Builder $query, int $limit = 1): void
     {
-        $query->withCount(['posts', 'categories'])->orderByRaw('posts_count + categories_count desc')->take($limit);
+        $query->orderByDesc(
+            DB::table('taggables')
+                ->selectRaw('count(*)')
+                ->whereColumn('taggables.tag_id', 'tags.id')
+        )->take($limit);
     }
 
     public function categories(): MorphToMany
