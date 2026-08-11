@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.20](https://github.com/bartvantuijn/noton/compare/v1.0.19...v1.0.20) (2026-11-08)
+
+* Fix PostgreSQL tag ordering (#17)
+* Add general improvements
+
 ## [1.0.19](https://github.com/bartvantuijn/noton/compare/v1.0.18...v1.0.19) (2026-05-08)
 
 * Add GitHub star button
