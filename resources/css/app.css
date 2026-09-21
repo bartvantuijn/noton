@@ -97,3 +97,66 @@ html.dark .phiki span {
 .fi-fo-markdown-editor .editor-preview-side {
     font-family: var(--default-font-family), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Print posts without the application layout or metadata */
+@media print {
+    html:has(#content) {
+        color-scheme: light;
+        background: white;
+        min-height: 0;
+    }
+
+    body:has(#content) {
+        min-height: 0;
+
+        & > :not(.fi-layout),
+        & .fi-layout > :not(.fi-main-ctn),
+        & .fi-header,
+        & .fi-section-header-after-ctn,
+        & .fi-section-content > :not(:has(#content)),
+        & #content button {
+            display: none !important;
+        }
+
+        &,
+        & * {
+            color: black !important;
+            background: white !important;
+            box-shadow: none !important;
+        }
+
+        & :is(.fi-layout, .fi-main-ctn, .fi-main, .fi-page-header-main-ctn,
+            .fi-page-content, .fi-sc, .fi-section-content-ctn) {
+            display: block !important;
+            width: auto;
+            max-width: none;
+            height: auto;
+            min-height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: visible;
+            border: 0;
+        }
+
+        & .fi-section-header {
+            padding: 0 0 1rem;
+            break-after: avoid;
+        }
+
+        & .fi-section-header-heading {
+            font-size: 1.5rem;
+        }
+
+        & #content li::marker {
+            color: black;
+        }
+
+        & #content :is(h1, h2, h3, h4, h5, h6) {
+            break-after: avoid;
+        }
+
+        & #content :is(img, tr) {
+            break-inside: avoid;
+        }
+    }
+}
