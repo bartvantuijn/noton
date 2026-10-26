@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.21](https://github.com/bartvantuijn/noton/compare/v1.0.20...v1.0.21) (2026-26-10)
+
+* Fix post print layout
+* Add general improvements
+
 ## [1.0.20](https://github.com/bartvantuijn/noton/compare/v1.0.19...v1.0.20) (2026-11-08)
 
 * Fix PostgreSQL tag ordering (#17)
